@@ -1,0 +1,92 @@
+import { useUser } from "@/app/context/user";
+import { GET_TOKEN_AMOUNT } from "@/app/graphql/GetWalletInfo";
+import { WalletInfo } from "@/app/types";
+import { useQuery } from "@apollo/client";
+import Link from "next/link";
+import { IoIosWallet } from "react-icons/io";
+import { RiTokenSwapLine } from "react-icons/ri";
+
+
+export default function WalletBalance () { 
+
+    const contextUser = useUser()
+   
+    const { loading, error, data } = useQuery(GET_TOKEN_AMOUNT, {
+        variables: {
+            "filter": {
+              "isDaoCoin": {
+                "equalTo": true
+              },
+              "holder": {
+                "publicKey": {
+                  "equalTo": contextUser?.user?.PublicKeyBase58Check
+                }
+              },
+              "creatorPkid": {
+                "equalTo": "BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej"
+              }
+            },
+            "publicKey": contextUser?.user?.PublicKeyBase58Check
+          },
+      });
+      
+    return(
+        data ? (
+            <>
+           <p className="mt-20 flex flex-col w-full text-sky-200 text-center text-xl pb-2">Your Wallet Balances</p>
+           {data.tokenBalances.nodes.length > 0 ? (
+               
+                data.tokenBalances.nodes.map((walletinfo: WalletInfo) => (
+                   
+                    <div className="flex justify-center items-center text-sky-200" key={walletinfo.balanceNanos}>
+                        <RiTokenSwapLine className="" size="20" /> <span>DeSoHosting Tokens:</span>
+                        <span className="ml-2 mr-2">{walletinfo.balanceNanos / 1000000000000000000} </span>
+                        <Link className="text-xs" target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
+                    </div>
+               
+            
+            ))
+           
+                
+                ): (
+                <>
+                <div className="flex justify-center items-center text-sky-200">
+                        <RiTokenSwapLine className="" size="20" /> <span>DeSoHosting Tokens:</span>
+                        <span className="ml-2 mr-2">{0} </span>
+                        <Link className="text-xs" target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
+                    </div>
+                </>
+                )}
+           
+          
+             <div className="flex justify-center items-center text-sky-200">
+                  <img src="../../../images/desologo.svg" className="h-6" alt=""/>
+                  <span>DeSo:</span>
+                  <span className="ml-2">{data.desoBalance.balanceNanos / 1000000000}</span>
+                  
+                 </div>
+           
+        </>
+        ) : (
+            <>
+            <p className="mt-20 flex flex-col w-full text-sky-200 text-center text-xl pb-2">Your Wallet Balances</p>
+            <div className="flex justify-center items-center text-sky-200">
+                        <RiTokenSwapLine className="" size="20" /> <span>DeSoHosting Tokens:</span>
+                        <span className="ml-2 mr-2">{0} </span>
+                        <Link className="text-xs" target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
+                    </div>
+                 <div className="flex justify-center items-center text-sky-200">
+                 <img src="../../../images/desologo.svg" className="h-6" alt=""/>
+                 <span>DeSo:</span>
+                 <span className="ml-2">{0}</span>
+                 
+                </div>    
+                </>
+        )
+
+       
+    )
+
+
+
+}
