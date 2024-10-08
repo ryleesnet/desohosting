@@ -11,6 +11,7 @@ export default function MainContent () {
     const contextUser = useUser()
     const walletBalanceTokensConverted = (walletBalanceTokens / 1000000000000000000 )
     const walletBalanceDesoConverted = (walletBalanceDeSo / 1000000000 )
+    
 
     const data: arrayOfServerTypes = {
         serverInfo: [
@@ -39,7 +40,7 @@ export default function MainContent () {
 
       async function buyWithTokens (tokens: number, payment_plan: string) {
 
-        const tokensToBurn = "0x" + (tokens * 100000000000000000000).toString(16)
+        const tokensToBurn = "0x" + (tokens * 1e18).toString(16)
 
 
         const data = {

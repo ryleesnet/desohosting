@@ -234,6 +234,7 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
                 GlobalDESOLimit: 1 * 1e9, // 1 Deso
                 TransactionCountLimitMap: {
                   BASIC_TRANSFER: 'UNLIMITED',
+                  SUBMIT_POST: 'UNLIMITED',
                 },
                 DAOCoinOperationLimitMap: {
                   'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
@@ -252,6 +253,7 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
                 GlobalDESOLimit: 1 * 1e9, // 1 Deso
                 TransactionCountLimitMap: {
                   BASIC_TRANSFER: 'UNLIMITED',
+                  SUBMIT_POST: 'UNLIMITED',
                 },
                 DAOCoinOperationLimitMap: {
                   'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
@@ -268,6 +270,7 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
                   GlobalDESOLimit: 1 * 1e9, // 1 Deso
                   TransactionCountLimitMap: {
                     BASIC_TRANSFER: 'UNLIMITED',
+                    SUBMIT_POST: 'UNLIMITED',
                   },
                   DAOCoinOperationLimitMap: {
                     'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
