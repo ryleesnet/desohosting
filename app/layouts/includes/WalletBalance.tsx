@@ -5,7 +5,6 @@ import { WalletInfo } from "@/app/types";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useEffect } from "react";
-import { IoIosWallet } from "react-icons/io";
 import { RiTokenSwapLine } from "react-icons/ri";
 
 
@@ -34,6 +33,9 @@ export default function WalletBalance () {
       });
 
       useEffect(() => {
+        if (!contextUser) {
+          return
+        }
         if (data) {
           data.tokenBalances.nodes.map((walletinfo: WalletInfo) => {
             setWalletBalanceDeSo(data.desoBalance.balanceNanos)
@@ -54,7 +56,7 @@ export default function WalletBalance () {
                     <div className="flex justify-center items-center text-sky-200" key={walletinfo.balanceNanos}>
                         <RiTokenSwapLine className="" size="20" /> <span>DeSoHosting Tokens:</span>
                         <span className="ml-2 mr-2">{(walletinfo.balanceNanos / 1000000000000000000).toLocaleString()} </span>
-                        <Link className="text-xs" target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
+                        <Link className="text-xs " target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
                     </div>
                
             
@@ -66,7 +68,7 @@ export default function WalletBalance () {
                 <div className="flex justify-center items-center text-sky-200">
                         <RiTokenSwapLine className="" size="20" /> <span>DeSoHosting Tokens:</span>
                         <span className="ml-2 mr-2">{0} </span>
-                        <Link className="text-xs" target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
+                        <Link className="text-xs bg-sky-500" target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
                     </div>
                 </>
                 )}
@@ -86,7 +88,7 @@ export default function WalletBalance () {
             <div className="flex justify-center items-center text-sky-200">
                         <RiTokenSwapLine className="" size="20" /> <span>DeSoHosting Tokens:</span>
                         <span className="ml-2 mr-2">{0} </span>
-                        <Link className="text-xs" target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
+                        <Link className="text-xs bg-slate-700 p-1 rounded" target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
                     </div>
                  <div className="flex justify-center items-center text-sky-200">
                  <img src="../../../images/desologo.svg" className="h-6" alt=""/>

@@ -7,7 +7,7 @@ import { useUser } from "../context/user";
 import { burnDeSoToken, sendDeso, SendDeSoRequest, submitPost, SubmitPostRequestParams, TxRequestWithOptionalFeesAndExtraData } from "deso-protocol";
 import PopupThanks from "./includes/PopupThanks";
 import Link from "next/link";
-
+import CreateVMs from "../hooks/createVMs"
 
 export default function MainContent () { 
     const {setIsVisible, tokenPrice, setTokenPrice, desoPrice, setDesoPrice, currency, walletBalanceDeSo, walletBalanceTokens, searchTerm, serverType, isConfirmedVisible, setIsConfirmedVisible} = useGeneralStore()
@@ -43,6 +43,11 @@ export default function MainContent () {
 
       async function buyWithTokens (tokens: number, payment_plan: string) {
 
+        if (!contextUser?.user) {
+            contextUser?.login()
+            return
+        }
+
         const tokensToBurn = "0x" + (tokens * 1e18).toString(16)
 
 
@@ -70,15 +75,24 @@ export default function MainContent () {
             }
             
             submitPost(postdata).then((res => {
-                console.log(res)
                 setIsVisible(false)
                 setIsConfirmedVisible(true)
-            }))
+            })).catch(error => {
+                console.log(error)
+                setIsVisible(false)
+            })
 			
-		})
+		}).catch(error => {
+            console.log(error)
+            setIsVisible(false)
+        })
     }
     
     function buyWithDeSo (desoAmount: number, payment_plan: string) {
+        if (!contextUser?.user) {
+            contextUser?.login()
+            return
+        }
 
         const desoNanosToSend = desoAmount * 1e9 
         const data: TxRequestWithOptionalFeesAndExtraData<SendDeSoRequest> = {
@@ -105,9 +119,15 @@ export default function MainContent () {
             }
             
             submitPost(postdata).then((res => {
-                console.log(res)
-            }))
-        })) 
+                
+            })).catch(error => {
+                console.log(error)
+                setIsVisible(false)
+            })
+        })).catch(error => {
+            console.log(error)
+            setIsVisible(false)
+        }) 
     }
 
 
@@ -115,7 +135,7 @@ export default function MainContent () {
     return(
         <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-4 mt-4">
-        
+        <button className="absolute t-60 left-20 bg-red-700" onClick={CreateVMs}>Test</button>
         <Popup>
          <div className="flex flex-col">   
                  <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice) : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice), "Tokens - Monthly"): buyWithDeSo(Number(desoPrice), "DeSo - Monthly")}>
@@ -214,7 +234,7 @@ export default function MainContent () {
                 </>
             </PopupThanks>
         </div>
-       
+      
          
      </>
     )

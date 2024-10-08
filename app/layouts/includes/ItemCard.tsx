@@ -1,23 +1,18 @@
 import { useUser } from "@/app/context/user";
-import { avatarUrl } from "@/app/deso/deso-api";
-import { FcPicture } from "react-icons/fc";
 import { HiServerStack } from "react-icons/hi2";
 import { RiTokenSwapLine } from "react-icons/ri";
 import { FaMemory } from "react-icons/fa";
 import { FiCpu } from "react-icons/fi";
 import { RiHardDrive3Line } from "react-icons/ri";
-import { arrayOfServerTypes, serverType } from "@/app/types";
+import { serverType } from "@/app/types";
 import { useGeneralStore } from "@/app/stores/general";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import Popup from "./Popup";
-import { burnDeSoToken} from "deso-protocol";
-import { useEffect, useState } from "react";
-
 
 export default function ItemCard (serverInfo: serverType) {
     const {desoPriceUSD, setIsVisible, tokenPrice, setTokenPrice, setCurrency, setDesoPrice, setServerType} = useGeneralStore()
     const tokenPriceLocal = ((serverInfo.price / .01 ) / 2).toFixed(2)
     const desoPriceLocal = (serverInfo.price / (desoPriceUSD / 100 )).toFixed(2)
+    const contextUser = useUser()
  
 
     return (
@@ -46,6 +41,10 @@ export default function ItemCard (serverInfo: serverType) {
                      <div className="flex items-center">
                         
                         <button className="flex items-centered justify-center bg-sky-900 text-sky-200 border rounded-md px-3 py-[6px] hover:bg-sky-700 mt-4 mb-4 w-24" onClick={() => {
+                            if (!contextUser?.user) {
+                                contextUser?.login()
+                                return
+                            }
                             setIsVisible(true)
                             setTokenPrice(tokenPriceLocal)
                             setCurrency('token')
@@ -59,6 +58,10 @@ export default function ItemCard (serverInfo: serverType) {
                     <div className="flex items-center">
                         
                         <button className="flex items-centered justify-center bg-sky-900 text-sky-200 border rounded-md px-3 py-[6px] hover:bg-sky-700 mt-4 mb-4 w-24" onClick={() => {
+                            if (!contextUser?.user) {
+                                contextUser?.login()
+                                return
+                            }
                             setIsVisible(true)
                             setDesoPrice(desoPriceLocal)
                             setCurrency('deso')

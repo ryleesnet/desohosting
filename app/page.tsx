@@ -8,7 +8,7 @@ import { onError } from "@apollo/client/link/error";
 
 export default function Home() {
   const errorLink = onError((e) => {
-    console.log(e)
+    //console.log(e)
     })
   
   const link = from ([
