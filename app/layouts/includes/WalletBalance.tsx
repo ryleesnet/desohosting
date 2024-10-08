@@ -1,8 +1,10 @@
 import { useUser } from "@/app/context/user";
 import { GET_TOKEN_AMOUNT } from "@/app/graphql/GetWalletInfo";
+import { useGeneralStore } from "@/app/stores/general";
 import { WalletInfo } from "@/app/types";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
+import { useEffect } from "react";
 import { IoIosWallet } from "react-icons/io";
 import { RiTokenSwapLine } from "react-icons/ri";
 
@@ -10,6 +12,7 @@ import { RiTokenSwapLine } from "react-icons/ri";
 export default function WalletBalance () { 
 
     const contextUser = useUser()
+    const {setWalletBalanceDeSo, setWalletBalanceTokens} = useGeneralStore()
    
     const { loading, error, data } = useQuery(GET_TOKEN_AMOUNT, {
         variables: {
@@ -29,15 +32,25 @@ export default function WalletBalance () {
             "publicKey": contextUser?.user?.PublicKeyBase58Check
           },
       });
+
+      useEffect(() => {
+        if (data) {
+          data.tokenBalances.nodes.map((walletinfo: WalletInfo) => {
+            setWalletBalanceDeSo(data.desoBalance.balanceNanos)
+            setWalletBalanceTokens(walletinfo.balanceNanos)
+          })
+        }
+        
+      },[data])
       
     return(
         data ? (
             <>
-           <p className="mt-20 flex flex-col w-full text-sky-200 text-center text-xl pb-2">Your Wallet Balances</p>
+           <p className="mt-20 flex flex-col w-full text-sky-200 text-center text-xl pb-2">Wallet Balances</p>
            {data.tokenBalances.nodes.length > 0 ? (
                
                 data.tokenBalances.nodes.map((walletinfo: WalletInfo) => (
-                   
+                  
                     <div className="flex justify-center items-center text-sky-200" key={walletinfo.balanceNanos}>
                         <RiTokenSwapLine className="" size="20" /> <span>DeSoHosting Tokens:</span>
                         <span className="ml-2 mr-2">{walletinfo.balanceNanos / 1000000000000000000} </span>

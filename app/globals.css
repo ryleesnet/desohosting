@@ -31,3 +31,15 @@ body {
     text-wrap: balance;
   }
 }
+
+.popup {
+  display: none;
+
+
+}
+
+.popup.show {
+  display: flex;
+}
+
+

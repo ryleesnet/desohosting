@@ -8,15 +8,16 @@ import { useUser } from "@/app/context/user";
 import { useGeneralStore } from "@/app/stores/general";
 import { FaServer } from "react-icons/fa";
 import { getExchangeRates } from "deso-protocol";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 
 
 export default function TopNav () {
 
     const contextUser = useUser()
-    const {desoPriceUSD, setDesoPriceUSD} = useGeneralStore() 
+    const {desoPriceUSD, setDesoPriceUSD} = useGeneralStore()
     let [showMenu, setShowMenu] = useState<boolean>(false)
-    let { setIsLoginOpen, setIsEditProfileOpen } = useGeneralStore()
+    let { setIsEditProfileOpen, setSearchTerm } = useGeneralStore()
 
 
     useEffect(() => { setIsEditProfileOpen(false) }, [])
@@ -24,9 +25,12 @@ export default function TopNav () {
     const router = useRouter()
     const pathname = usePathname()
     const handleSearchName = (event: {target: { value: string }}) => {
+        setSearchTerm(event.target.value);
         console.log(event.target.value)
 
     }
+
+
 
     const desoPrice = () => {
         return getExchangeRates().then(rate => (
@@ -37,7 +41,7 @@ export default function TopNav () {
 
     useEffect(() => {
         desoPrice()
-    })
+    },[])
 
     return (
         <>
@@ -55,7 +59,7 @@ export default function TopNav () {
                         type="text"
                         onChange={handleSearchName}
                         className="w-full pl-3 my-2 bg-transparent placeholder-sky-200 text-[15px] text-sky-200 focus:outline-none"
-                        placeholder="Search (Coming Soon)"
+                        placeholder="Search"
                         />
 
                     <div className="px-3 py-1 flex items-center ">
@@ -63,7 +67,7 @@ export default function TopNav () {
                     </div>
                 </div>
 
-                <div className="text-sky-200"> DeSo Price: ${desoPriceUSD / 100} USD</div>
+                <div className="text-sky-200"> DeSo Price: ${desoPriceUSD ? (desoPriceUSD / 100 )  : (<><AiOutlineLoading3Quarters className="inline ml-2 animate-spin" /></>)} USD</div>
 
                 <div className="flex items-center gap-3">
                    

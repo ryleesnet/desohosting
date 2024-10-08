@@ -233,11 +233,12 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
             spendingLimitOptions: {
                 GlobalDESOLimit: 1 * 1e9, // 1 Deso
                 TransactionCountLimitMap: {
-                  SUBMIT_POST: 'UNLIMITED',
                   BASIC_TRANSFER: 'UNLIMITED',
-                  LIKE: 'UNLIMITED',
-                  FOLLOW: 'UNLIMITED'
-                  
+                },
+                DAOCoinOperationLimitMap: {
+                  'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
+                    'burn' : 'UNLIMITED'
+                  }
                 }
             },
             nodeURI: 'https://desonode.rylees.net',
@@ -248,32 +249,32 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
             });
             configure({
               spendingLimitOptions: {
-                  GlobalDESOLimit: 1 * 1e9, // 1 Deso
-                  TransactionCountLimitMap: {
-                    SUBMIT_POST: 'UNLIMITED',
-                    BASIC_TRANSFER: 'UNLIMITED',
-                    LIKE: 'UNLIMITED',
-                    FOLLOW: 'UNLIMITED'
-                    
+                GlobalDESOLimit: 1 * 1e9, // 1 Deso
+                TransactionCountLimitMap: {
+                  BASIC_TRANSFER: 'UNLIMITED',
+                },
+                DAOCoinOperationLimitMap: {
+                  'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
+                    'burn' : 'UNLIMITED'
                   }
-              },
+                }
+            },
               nodeURI: 'https://desonode.rylees.net',
               appName: APP_NAME,
-              //identityURI: 'https://identity.rylees.net'
-              
               });
       
 	    configure({
                 spendingLimitOptions: {
-                    GlobalDESOLimit: 1 * 1e9, // 1 Deso
-                    TransactionCountLimitMap: {
-                      SUBMIT_POST: 'UNLIMITED',
-                      BASIC_TRANSFER: 'UNLIMITED',
-                      LIKE: 'UNLIMITED',
-                      FOLLOW: "UNLIMITED"
-
+                  GlobalDESOLimit: 1 * 1e9, // 1 Deso
+                  TransactionCountLimitMap: {
+                    BASIC_TRANSFER: 'UNLIMITED',
+                  },
+                  DAOCoinOperationLimitMap: {
+                    'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
+                      'burn' : 'UNLIMITED'
                     }
-                },
+                  }
+              },
                 appName: APP_NAME,
                 nodeURI: 'https://desonode.rylees.net',
                 });
