@@ -39,7 +39,7 @@ export default function MainContent () {
 
       async function buyWithTokens (tokens: number, payment_plan: string) {
 
-        const tokensToBurn = (tokens * 100000000000000000000).toString(16)
+        const tokensToBurn = "0x" + (tokens * 100000000000000000000).toString(16)
 
 
         const data = {
