@@ -4,7 +4,7 @@ import { arrayOfServerTypes, serverType } from "../types";
 import ItemCard from "./includes/ItemCard";
 import Popup from "./includes/Popup";
 import { useUser } from "../context/user";
-import { burnDeSoToken, sendDeso, SendDeSoRequest, submitPost, SubmitPostRequestParams, TxRequestWithOptionalFeesAndExtraData } from "deso-protocol";
+import { burnDeSoToken, identity, sendDeso, SendDeSoRequest, submitPost, SubmitPostRequestParams, TxRequestWithOptionalFeesAndExtraData } from "deso-protocol";
 import PopupThanks from "./includes/PopupThanks";
 import Link from "next/link";
 import CreateVMs from "../hooks/createVMs"
@@ -48,20 +48,16 @@ export default function MainContent () {
             return
         }
         contextUser?.login()
+        
         const tokensToBurn = "0x" + (tokens * 1e18).toString(16)
 
 
-        /* const data = {
+        const data = {
 			"UpdaterPublicKeyBase58Check": String(localStorage.getItem("desoActivePublicKey")),
 			"ProfilePublicKeyBase58CheckOrUsername": "BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej",
 			"CoinsToBurnNanos": tokensToBurn,
-		} */
+		}
 
-            const data = {
-                "UpdaterPublicKeyBase58Check": "BC1YLijd5XEneHzVd5VFb2mgdNkRpPneNWY6fKJ3ptBVJ5guqAnPSke",
-                "ProfilePublicKeyBase58CheckOrUsername": "BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej",
-                "CoinsToBurnNanos": "0xd8d726b7177a80000",
-            }
 
         console.log("Data before burn command: ", data)
        
