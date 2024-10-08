@@ -24,12 +24,9 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const isRunned = useRef(false);
     const [loggedUserPublicKey, setLoggedUserPublicKey] = useState<string | undefined>('');  
-    const [postText, setPostText] = useState('');
-    const [recentPost, setRecentPost] = useState(undefined);
+  
     const [altLoggedUsers, setAltLoggedUsers] = useState<Record<string, StoredUser> | null>(null)
-    const [showSwitchUserMenu, setShowSwitchUserMenu] = useState(undefined);  
-    const [loading, setLoading] = useState(false);   
-    const switchUsersEl = useRef(null);
+   
     const APP_NAME = 'ChainClips by @ryleesnet'; // aka MEMO for derived keys
 
     
@@ -44,75 +41,8 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
         setState({ ...state, showSwitchUserMenu: false });
         }
     };
-   /*  const updateLoggedUserProfile = async (publicKey: string | undefined) => {
-        if (!publicKey) {
-        setState({ ...state, loggedUserProfile: null });
-        return;
-        }
-    
-        try {
-        const result = await getSingleProfile({
-            PublicKeyBase58Check: publicKey
-        });
-        const { Profile, error } = result;
-    
-        if (error) {
-            console.error("Error:", error);
-            setState({ ...state, loggedUserProfile: null });
-        }
-    
-        if (Profile) {
-          getProfile(publicKey).then(function(result){
-            setUser(result)
-          })
-            setUser(Profile)
-        }
-        } catch (error) {
-        console.error("Error:", error);
-        }
-    }; */
-    
-    const makeNewPost = async () => {
-        setState({ ...state, loading: true });
-    
-        try {
-        const result = await createSubmitPostTransaction({
-            UpdaterPublicKeyBase58Check: state.loggedUserPublicKey,
-            Body: state.postText,
-            MinFeeRateNanosPerKB: 1500
-        });
-    
-        const { error, TransactionHex } = result;
-        console.log("createSubmitPostTransaction result:", result);
-    
-        if (error) {
-            console.error("Error:", error);
-        }
-    
-        if (TransactionHex) {
-            const signedTransaction = await identity.signTx(TransactionHex);
-            console.log("identity.signTx result:", signedTransaction);
-    
-            const submittedTransaction = await identity.submitTx(signedTransaction);
-            console.log("identity.submitTx result:", submittedTransaction);
-    
-            const { PostEntryResponse } = submittedTransaction;
-            if (PostEntryResponse) {
-            setState({ ...state, recentPost: PostEntryResponse });
-            }
-        }
-    
-        setState({ ...state, loading: false });
-        } catch (error) {
-        console.error("Error:", error);
-        setState({ ...state, loading: false });
-        }
-    };
-    
-    const hasAltUsers = (obj: { [key: string]: any }): boolean => {
-        return Object.keys(obj).length > 0;
-    };
-    
+
+        
     const [state, setState] = useState<State>({
       loggedUserPublicKey: '',
       loggedUserProfile: null,
@@ -228,42 +158,6 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
     const login = async () => {
             if (isRunned.current) return;
             isRunned.current = true;
-      
-            identity.configure({
-            spendingLimitOptions: {
-                GlobalDESOLimit: 1 * 1e9, // 1 Deso
-                TransactionCountLimitMap: {
-                  BASIC_TRANSFER: 'UNLIMITED',
-                  SUBMIT_POST: 'UNLIMITED',
-                },
-                DAOCoinOperationLimitMap: {
-                  'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
-                    'burn' : 'UNLIMITED'
-                  }
-                }
-            },
-            nodeURI: 'https://desonode.rylees.net',
-            appName: APP_NAME,
-            //identityURI: 'https://identity.rylees.net'
-
-            
-            });
-            configure({
-              spendingLimitOptions: {
-                GlobalDESOLimit: 1 * 1e9, // 1 Deso
-                TransactionCountLimitMap: {
-                  BASIC_TRANSFER: 'UNLIMITED',
-                  SUBMIT_POST: 'UNLIMITED',
-                },
-                DAOCoinOperationLimitMap: {
-                  'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
-                    'burn' : 'UNLIMITED'
-                  }
-                }
-            },
-              nodeURI: 'https://desonode.rylees.net',
-              appName: APP_NAME,
-              });
       
 	    configure({
                 spendingLimitOptions: {

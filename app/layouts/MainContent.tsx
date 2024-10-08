@@ -52,14 +52,14 @@ export default function MainContent () {
 
 
         const data = {
-			"UpdaterPublicKeyBase58Check": String(contextUser?.user?.PublicKeyBase58Check),
+			"UpdaterPublicKeyBase58Check": String(localStorage.getItem("desoActivePublicKey")),
 			"ProfilePublicKeyBase58CheckOrUsername": "BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej",
 			"CoinsToBurnNanos": tokensToBurn,
 		}
        
 		await burnDeSoToken(data).then(res => {
             const postdata: SubmitPostRequestParams = {
-                UpdaterPublicKeyBase58Check: String(contextUser?.user?.PublicKeyBase58Check),
+                UpdaterPublicKeyBase58Check: String(localStorage.getItem("desoActivePublicKey")),
                 ParentStakeID: 'b737dc7c74369ea7cc25bce6d3b14a4608df9bde1b37af7c3ecd39dca6246fc7',
                 BodyObj: {
                     Body: "@DeSoHosting - I've made a purchase!",
@@ -135,7 +135,7 @@ export default function MainContent () {
     return(
         <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-4 mt-4">
-        <button className="absolute t-60 left-20 bg-red-700" onClick={CreateVMs}>Test</button>
+        
         <Popup>
          <div className="flex flex-col">   
                  <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice) : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice), "Tokens - Monthly"): buyWithDeSo(Number(desoPrice), "DeSo - Monthly")}>
