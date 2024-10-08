@@ -47,15 +47,23 @@ export default function MainContent () {
             contextUser?.login()
             return
         }
-
+        contextUser?.login()
         const tokensToBurn = "0x" + (tokens * 1e18).toString(16)
 
 
-        const data = {
+        /* const data = {
 			"UpdaterPublicKeyBase58Check": String(localStorage.getItem("desoActivePublicKey")),
 			"ProfilePublicKeyBase58CheckOrUsername": "BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej",
 			"CoinsToBurnNanos": tokensToBurn,
-		}
+		} */
+
+            const data = {
+                "UpdaterPublicKeyBase58Check": "BC1YLijd5XEneHzVd5VFb2mgdNkRpPneNWY6fKJ3ptBVJ5guqAnPSke",
+                "ProfilePublicKeyBase58CheckOrUsername": "BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej",
+                "CoinsToBurnNanos": "0xd8d726b7177a80000",
+            }
+
+        console.log("Data before burn command: ", data)
        
 		await burnDeSoToken(data).then(res => {
             const postdata: SubmitPostRequestParams = {

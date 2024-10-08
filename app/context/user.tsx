@@ -27,7 +27,7 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
   
     const [altLoggedUsers, setAltLoggedUsers] = useState<Record<string, StoredUser> | null>(null)
    
-    const APP_NAME = 'ChainClips by @ryleesnet'; // aka MEMO for derived keys
+    const APP_NAME = 'DeSoHosting by @ryleesnet'; // aka MEMO for derived keys
 
     
 
@@ -75,13 +75,8 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
                     getProfile(currentUser?.publicKey, "").then(function(result){
                       setUser(result)
                     })
-                    getFollowers(currentUser?.publicKey).then(function(result){
-                      setFollowers(result)
-                      //console.log("getFollowers: ",result)
-                    })
-                    getFollowing(currentUser?.publicKey).then(function(result){
-                      setFollowing(result)
-                    })
+                   
+                   
                   }
                   
         
@@ -173,7 +168,7 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
                   }
               },
                 appName: APP_NAME,
-                nodeURI: 'https://desonode.rylees.net',
+                //nodeURI: 'https://desonode.rylees.net',
                 });
 
             
