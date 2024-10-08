@@ -20,6 +20,7 @@ interface GeneralStore {
     walletBalanceDeSo: number,
     searchTerm: string,
     serverType: string,
+    isConfirmedVisible: boolean,
 
 
     setIsLoginOpen: (val: boolean) => void,
@@ -36,6 +37,7 @@ interface GeneralStore {
     setWalletBalanceDeSo: (val: number) => void,
     setSearchTerm: (val: string) => void,
     setServerType: (val: string) => void,
+    setIsConfirmedVisible: (val: boolean) => void,
 }
 
 export const useGeneralStore = create<GeneralStore>()(
@@ -51,6 +53,7 @@ export const useGeneralStore = create<GeneralStore>()(
                 pendingPosts: [],
                 desoPriceUSD: 0,
                 isVisible: false,
+                isConfirmedVisible: false,
                 tokenPrice: '',
                 desoPrice: '',
                 currency: '',
@@ -72,7 +75,8 @@ export const useGeneralStore = create<GeneralStore>()(
                 setWalletBalanceTokens: (val: number) => set ({ walletBalanceTokens: val}),
                 setWalletBalanceDeSo: (val: number) => set ({ walletBalanceDeSo: val}),
                 setSearchTerm: (val: string) => set({ searchTerm: val}),
-                setServerType: (val: string) => set({ serverType: val})
+                setServerType: (val: string) => set({ serverType: val}),
+                setIsConfirmedVisible: (val: boolean) => set({ isConfirmedVisible: val}),
                 }),
                 
                 

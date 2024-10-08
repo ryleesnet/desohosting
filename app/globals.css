@@ -42,4 +42,12 @@ body {
   display: flex;
 }
 
+.popupthanks {
+  display: none;
 
+
+}
+
+.popupthanks.show {
+  display: flex;
+}

@@ -5,9 +5,12 @@ import ItemCard from "./includes/ItemCard";
 import Popup from "./includes/Popup";
 import { useUser } from "../context/user";
 import { burnDeSoToken, sendDeso, SendDeSoRequest, submitPost, SubmitPostRequestParams, TxRequestWithOptionalFeesAndExtraData } from "deso-protocol";
+import PopupThanks from "./includes/PopupThanks";
+import Link from "next/link";
+
 
 export default function MainContent () { 
-    const {setIsVisible, tokenPrice, setTokenPrice, desoPrice, setDesoPrice, currency, walletBalanceDeSo, walletBalanceTokens, searchTerm, serverType} = useGeneralStore()
+    const {setIsVisible, tokenPrice, setTokenPrice, desoPrice, setDesoPrice, currency, walletBalanceDeSo, walletBalanceTokens, searchTerm, serverType, isConfirmedVisible, setIsConfirmedVisible} = useGeneralStore()
     const contextUser = useUser()
     const walletBalanceTokensConverted = (walletBalanceTokens / 1000000000000000000 )
     const walletBalanceDesoConverted = (walletBalanceDeSo / 1000000000 )
@@ -68,6 +71,8 @@ export default function MainContent () {
             
             submitPost(postdata).then((res => {
                 console.log(res)
+                setIsVisible(false)
+                setIsConfirmedVisible(true)
             }))
 			
 		})
@@ -110,6 +115,7 @@ export default function MainContent () {
     return(
         <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-4 mt-4">
+        
         <Popup>
          <div className="flex flex-col">   
                  <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice) : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice), "Tokens - Monthly"): buyWithDeSo(Number(desoPrice), "DeSo - Monthly")}>
@@ -175,9 +181,11 @@ export default function MainContent () {
                      </div>
                      </button>
                  <button className="m-2 p-2 rounded-xl bg-red-800 text-sky-200" onClick={() => {
+                     
                      setIsVisible(false)
                      setTokenPrice('')
                      setDesoPrice('')
+                     
                      }}> Cancel</button>
          </div>
                       
@@ -189,8 +197,24 @@ export default function MainContent () {
                 
             ))
         }
-            
+             <PopupThanks>
+                <>
+                <div className="flex flex-col items-center">
+                    <div className="flex mb-4 text-center">
+                        <div>
+                        Thanks for using DeSoHosting! You will be contacted via Direct Message in DeSo with ssh credentials soon! If you have any questions please reach out to
+                        <Link className="ml-0.5" href="https://desocialworld.com/u/DeSoHosting"> @DeSoHosting</Link> or
+                        <Link className="ml-0.5" href="https://desocialworld.com/u/ryleesnet">@ryleesnet</Link></div>
+                            
+                            
+                        </div>
+                    
+                    <button className="bg-slate-900 text-sky-200 p-2 pl-4 pr-4 rounded-xl" onClick={() => {setIsConfirmedVisible(false)}}>OK</button>
+                </div>
+                </>
+            </PopupThanks>
         </div>
+       
          
      </>
     )

@@ -29,7 +29,7 @@ function Popup({ children }: PopupProps) {
     <div
 
       id="popup-container"
-      className={`popup ${isVisible ? 'show' : ''} bg-slate-900/80 fixed flex flex-col justify-center rounded-2xl items-center w-1/4 h-3/5 mt-10`}
+      className={`popup ${isVisible ? 'show' : ''} bg-slate-900/80 fixed p-4 border flex-col items-center bg-slate-800 rounded-xl w-[26em] `}
       
     >
         
@@ -39,7 +39,7 @@ function Popup({ children }: PopupProps) {
             <p className='text-sky-200 mr-8 ml-8 m-2 text-center'>This will send DeSo from your wallet to @DeSoHosting and start your month of service.</p>
         )}
         <p className='text-sky-200 mt-2 mb-2'>Make your selection below:</p>
-      <div className="popup-content bg-slate-500 p-4 w-3/4 rounded-2xl">{children}</div>
+      <div className="popup-content bg-slate-500 p-4 w-5/6 rounded-2xl mb-4 mt-4">{children}</div>
     </div>
   );
 }
