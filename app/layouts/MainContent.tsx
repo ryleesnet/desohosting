@@ -110,17 +110,17 @@ export default function MainContent () {
         <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-4 mt-4">
         <Popup>
-         <div className="flex flex-col">     
+         <div className="flex flex-col">   
                  <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice) : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice), "Tokens - Monthly"): buyWithDeSo(Number(desoPrice), "DeSo - Monthly")}>
                      <div className="flex flex-col items-center">
                          <div className="w-full">1 Month </div>
                          <div className="flex items-center">
                              {currency === 'token' ? (
                                  <>
-                                 <div>{(tokenPrice).toLocaleString()} </div>
+                                 <div>{Number((tokenPrice)).toLocaleString()} </div>
                                  <RiTokenSwapLine className="ml-1" size="20" />
                                  </>) : (<>
-                                     <div>{(desoPrice)} </div>
+                                     <div>{Number(desoPrice).toFixed(2)} </div>
                                      <img src="../../../images/desologo.svg" className="h-6 ml-1" alt=""/>
                                  </>)}
                              
@@ -128,7 +128,7 @@ export default function MainContent () {
                          
                      </div>
                      </button>
-                     <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice) : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice)*3, "Tokens - Every 3 Months"): buyWithDeSo(Number(tokenPrice)*3, "DeSo - Every 3 Months")}>
+                     <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice)*3 : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice)*3, "Tokens - Every 3 Months"): buyWithDeSo(Number(tokenPrice)*3, "DeSo - Every 3 Months")}>
                      <div className="flex flex-col items-center">
                          <div className="w-full">3 Months </div>
                          <div className="flex items-center">
@@ -143,7 +143,7 @@ export default function MainContent () {
                          </div>
                      </div>
                      </button>
-                     <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice) : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice)*6, "Tokens - Every 6 Months"): buyWithDeSo(Number(tokenPrice)*6, "DeSo - Every 6 Months")}>
+                     <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice)*6 : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice)*6, "Tokens - Every 6 Months"): buyWithDeSo(Number(tokenPrice)*6, "DeSo - Every 6 Months")}>
                      <div className="flex flex-col items-center">
                          <div>6 Months </div>
                          <div className="flex items-center">
@@ -158,7 +158,7 @@ export default function MainContent () {
                          </div>
                      </div>
                      </button>
-                     <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice) : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice)*12, "Tokens - Yearly"): buyWithDeSo(Number(tokenPrice)*12, "DeSo - Yearly")}>
+                     <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice)*12 : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice)*12, "Tokens - Yearly"): buyWithDeSo(Number(tokenPrice)*12, "DeSo - Yearly")}>
                      <div className="flex flex-col items-center">
                          <div>1 Year </div>
                          <div className="flex items-center">

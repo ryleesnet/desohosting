@@ -53,7 +53,7 @@ export default function WalletBalance () {
                   
                     <div className="flex justify-center items-center text-sky-200" key={walletinfo.balanceNanos}>
                         <RiTokenSwapLine className="" size="20" /> <span>DeSoHosting Tokens:</span>
-                        <span className="ml-2 mr-2">{walletinfo.balanceNanos / 1000000000000000000} </span>
+                        <span className="ml-2 mr-2">{(walletinfo.balanceNanos / 1000000000000000000).toLocaleString()} </span>
                         <Link className="text-xs" target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
                     </div>
                
