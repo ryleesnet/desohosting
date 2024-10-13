@@ -4,7 +4,7 @@ import { arrayOfServerTypes, serverType } from "../types";
 import ItemCard from "./includes/ItemCard";
 import Popup from "./includes/Popup";
 import { useUser } from "../context/user";
-import { burnDeSoToken, identity, sendDeso, SendDeSoRequest, submitPost, SubmitPostRequestParams, TxRequestWithOptionalFeesAndExtraData } from "deso-protocol";
+import { burnDeSoToken, identity, sendDeso, SendDeSoRequest, submitPost, SubmitPostRequestParams, TransactionSpendingLimitResponseOptions, TxRequestWithOptionalFeesAndExtraData } from "deso-protocol";
 import PopupThanks from "./includes/PopupThanks";
 import Link from "next/link";
 import CreateVMs from "../hooks/createVMs"
@@ -41,15 +41,23 @@ export default function MainContent () {
 
 
 
-      async function buyWithTokens (tokens: number, payment_plan: string) {
+      function buyWithTokens (tokens: number, payment_plan: string) {
 
         if (!contextUser?.user) {
             contextUser?.login()
             return
         }
-        contextUser?.login()
+        const permToCheck : Partial<TransactionSpendingLimitResponseOptions> = {
+            DAOCoinOperationLimitMap: {
+                'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
+                  'burn' : 'UNLIMITED'
+                }
+        }
+    }
         
-        const tokensToBurn = "0x" + (tokens * 1e18).toString(16)
+        if (identity.hasPermissions(permToCheck)) {
+
+            const tokensToBurn = "0x" + (tokens * 1e18).toString(16)
 
 
         const data = {
@@ -58,10 +66,13 @@ export default function MainContent () {
 			"CoinsToBurnNanos": tokensToBurn,
 		}
 
+        const options = {
+            txLimitCount: 1
+        }
 
-        console.log("Data before burn command: ", data)
+        
        
-		await burnDeSoToken(data).then(res => {
+		burnDeSoToken(data, options).then(res => {
             const postdata: SubmitPostRequestParams = {
                 UpdaterPublicKeyBase58Check: String(localStorage.getItem("desoActivePublicKey")),
                 ParentStakeID: 'b737dc7c74369ea7cc25bce6d3b14a4608df9bde1b37af7c3ecd39dca6246fc7',
@@ -86,11 +97,11 @@ export default function MainContent () {
                 setIsVisible(false)
             })
 			
-		}).catch(error => {
-            console.log(error)
-            setIsVisible(false)
-        })
+		})
     }
+        }
+        
+        
     
     function buyWithDeSo (desoAmount: number, payment_plan: string) {
         if (!contextUser?.user) {

@@ -117,10 +117,12 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
                   setAltLoggedUsers(alternateUsers)          
                   break;             
                 case 'AUTHORIZE_DERIVED_KEY_START':
-                  // 
+                  //
+                  setAuthkeys(state) 
                   break;   
                 case 'AUTHORIZE_DERIVED_KEY_END':
-                  // 
+                  //
+                  setAuthkeys(state) 
                   break;                                                
                 case 'LOGOUT_START':
                   //     
@@ -148,7 +150,9 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
     }
  
 
-    useEffect(() => {checkUser() }, []);
+    useEffect(() => {
+      checkUser() 
+    }, []);
 
     const login = async () => {
             if (isRunned.current) return;
@@ -168,13 +172,13 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
                   }
               },
                 appName: APP_NAME,
-                //nodeURI: 'https://desonode.rylees.net',
+                nodeURI: 'https://desonode.rylees.net',
                 });
 
             
   
         identity.login()
-        await checkUser()
+        //await checkUser()
 
     }
 
