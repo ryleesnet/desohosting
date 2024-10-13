@@ -97,7 +97,10 @@ export default function MainContent () {
                 setIsVisible(false)
             })
 			
-		})
+		}).catch(error => {
+            console.log(error)
+            setIsVisible(false)
+        })
     }
         }
         
