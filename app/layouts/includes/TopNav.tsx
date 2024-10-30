@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {BiSearch, BiUser} from "react-icons/bi"
@@ -17,10 +18,7 @@ export default function TopNav () {
     const contextUser = useUser()
     const {desoPriceUSD, setDesoPriceUSD} = useGeneralStore()
     let [showMenu, setShowMenu] = useState<boolean>(false)
-    let { setIsEditProfileOpen, setSearchTerm } = useGeneralStore()
-
-
-    useEffect(() => { setIsEditProfileOpen(false) }, [])
+    let { setSearchTerm } = useGeneralStore()
 
     const router = useRouter()
     const pathname = usePathname()

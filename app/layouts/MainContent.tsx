@@ -1,31 +1,52 @@
+
+"use client"
 import { RiTokenSwapLine } from "react-icons/ri";
 import { useGeneralStore } from "../stores/general";
-import { arrayOfServerTypes, serverType } from "../types";
+import { arrayOfServerTypes } from "../types";
 import ItemCard from "./includes/ItemCard";
 import Popup from "./includes/Popup";
 import { useUser } from "../context/user";
 import { burnDeSoToken, identity, sendDeso, SendDeSoRequest, submitPost, SubmitPostRequestParams, TransactionSpendingLimitResponseOptions, TxRequestWithOptionalFeesAndExtraData } from "deso-protocol";
 import PopupThanks from "./includes/PopupThanks";
 import Link from "next/link";
-import CreateVMs from "../hooks/createVMs"
+import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, from, useQuery } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
+import WalletBalance from "./includes/WalletBalance";
+import CreateVMs from "../hooks/createVMs";
+import CurrentVms from "./includes/CurrentVms";
+import NewVms from "./includes/NewVms";
 
 export default function MainContent () { 
-    const {setIsVisible, tokenPrice, setTokenPrice, desoPrice, setDesoPrice, currency, walletBalanceDeSo, walletBalanceTokens, searchTerm, serverType, isConfirmedVisible, setIsConfirmedVisible} = useGeneralStore()
+    const setIsVisible = useGeneralStore((store) => store.setIsVisible)
+    const setTokenPrice = useGeneralStore((store) => store.setTokenPrice)
+    const tokenPrice = useGeneralStore((store) => store.tokenPrice)
+    const desoPrice = useGeneralStore((store) => store.desoPrice)
+    const setDesoPrice = useGeneralStore((store) => store.setDesoPrice)
+    const currency = useGeneralStore((store) => store.currency)
+    const walletBalanceDeSo = useGeneralStore((store) => store.walletBalanceDeSo)
+    const walletBalanceTokens = useGeneralStore((store) => store.walletBalanceTokens)
+    const searchTerm = useGeneralStore((store) => store.searchTerm)
+    const serverTypeInfo = useGeneralStore((store) => store.serverTypeInfo)
+    const setServerTypeInfo = useGeneralStore((store) => store.setServerTypeInfo)
+    const isConfirmedVisible = useGeneralStore((store) => store.isConfirmedVisible)
+    const setIsConfirmedVisible = useGeneralStore((store) => store.setIsConfirmedVisible)
+    
+
     const contextUser = useUser()
     const walletBalanceTokensConverted = (walletBalanceTokens / 1000000000000000000 )
     const walletBalanceDesoConverted = (walletBalanceDeSo / 1000000000 )
-    
 
     const data: arrayOfServerTypes = {
+        
         serverInfo: [
           { name: "Mini Server", memory: 1, vcpu: 1, ssd: 32, price: 5, priceInTokens: 350 },
           { name: "S1 Server", memory: 2, vcpu: 2, ssd: 32, price: 7, priceInTokens: 350 },
           { name: "S2 Server", memory: 4, vcpu: 2, ssd: 60, price: 12, priceInTokens: 525  },
           { name: "S3 Server", memory: 8, vcpu: 4, ssd: 60, price: 24, priceInTokens: 700  },
           { name: "S4 Server", memory: 16, vcpu: 8, ssd: 60, price: 48, priceInTokens: 700  },
-          { name: "N1 Node Server", memory: 32, vcpu: 8, ssd: 500, price: 150, priceInTokens: 875  },
-          { name: "N2 Node Server", memory: 64, vcpu: 8, ssd: 1000, price: 250, priceInTokens: 1050  },
-          { name: "N3 Node Server", memory: 128, vcpu: 16, ssd: 1000, price: 500, priceInTokens: 2100  }
+          //{ name: "N1 Node Server", memory: 32, vcpu: 8, ssd: 500, price: 150, priceInTokens: 875  },
+          //{ name: "N2 Node Server", memory: 64, vcpu: 8, ssd: 1000, price: 250, priceInTokens: 1050  },
+          //{ name: "N3 Node Server", memory: 128, vcpu: 16, ssd: 1000, price: 500, priceInTokens: 2100  }
         ]
       };
 
@@ -37,10 +58,20 @@ export default function MainContent () {
         return memory || ssd || nameMatch || nameMatch;
       }
     )
-        
-
-
-
+    const errorLink = onError((e) => {
+        //console.log(e)
+        })
+      
+      const link = from ([
+        errorLink,
+        new HttpLink({ uri: "https://graphql-prod.deso.com/graphql"}),
+      ]);
+      
+      const client = new ApolloClient({
+        cache: new InMemoryCache(),
+        link: link,
+      })
+    
       function buyWithTokens (tokens: number, payment_plan: string) {
 
         if (!contextUser?.user) {
@@ -82,7 +113,7 @@ export default function MainContent () {
                     VideoURLs: null
                 },
                 PostExtraData: {
-                    "server" : serverType,
+                    "server" : String(serverTypeInfo?.name),
                     "payment_plan" : payment_plan,
                     "last_payment_hex" : String(res.submittedTransactionResponse?.TxnHashHex)
                 }
@@ -92,6 +123,7 @@ export default function MainContent () {
             submitPost(postdata).then((res => {
                 setIsVisible(false)
                 setIsConfirmedVisible(true)
+                CreateVMs(serverTypeInfo, payment_plan, String(res.submittedTransactionResponse?.TxnHashHex), String(localStorage.getItem("desoActivePublicKey")), String(contextUser.user?.Username))
             })).catch(error => {
                 console.log(error)
                 setIsVisible(false)
@@ -129,7 +161,7 @@ export default function MainContent () {
                     VideoURLs: null
                 },
                 PostExtraData: {
-                    "server" : serverType,
+                    "server" : String(serverTypeInfo?.name),
                     "payment_plan" : payment_plan,
                     "last_payment_hex" : String(res.submittedTransactionResponse?.TxnHashHex)
                 }
@@ -147,13 +179,14 @@ export default function MainContent () {
             setIsVisible(false)
         }) 
     }
-
-
+    
+   
+   
 
     return(
         <>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center gap-4 mt-4">
-        
+        <ApolloProvider client={client}>
+        <WalletBalance/>
         <Popup>
          <div className="flex flex-col">   
                  <button className="m-2 p-2 rounded-xl bg-slate-700 text-sky-200 disabled:bg-gray-400 disabled:text-red-700" disabled={currency === 'token' ? walletBalanceTokensConverted < Number(tokenPrice) : walletBalanceDesoConverted < Number(desoPrice)} onClick={() => currency === 'token' ? buyWithTokens(Number(tokenPrice), "Tokens - Monthly"): buyWithDeSo(Number(desoPrice), "DeSo - Monthly")}>
@@ -223,19 +256,11 @@ export default function MainContent () {
                      setIsVisible(false)
                      setTokenPrice('')
                      setDesoPrice('')
-                     
                      }}> Cancel</button>
          </div>
                       
      </Popup>
-            {filteredData.map((serverInfo) => (
-                <div  key={serverInfo.name} className="m-2">
-                    <ItemCard {...serverInfo}/>
-                </div>
-                
-            ))
-        }
-             <PopupThanks>
+     <PopupThanks>
                 <>
                 <div className="flex flex-col items-center">
                     <div className="flex mb-4 text-center">
@@ -251,9 +276,9 @@ export default function MainContent () {
                 </div>
                 </>
             </PopupThanks>
-        </div>
-      
-         
+        <CurrentVms />
+        <NewVms />
+        </ApolloProvider>
      </>
     )
 

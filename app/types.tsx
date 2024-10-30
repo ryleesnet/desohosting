@@ -3,9 +3,6 @@ import { SubscriberNotification, GetVideoStatusRequest } from "deso-protocol";
 export interface UserContextTypes {
     user: Profile | null;
     authkeys: SubscriberNotification | null;
-    followers: Follows | null;
-    following: Follows | null;
-    //register: (username: string, publicKey: string, derivedPublicKey: string, derivedSeed: string) => Promise<void>;
     login: () => Promise<void>;
     logout: () => Promise<void>;
     checkUser: () => Promise<void>;
@@ -21,86 +18,50 @@ export interface buyInfoType {
     server: serverType
 }
 
-export interface UserContextTypes {
-    user: Profile | null;
-    followers: Follows | null;
-    following: Follows | null;
+export interface vmConfig {
+
+    maxdisk: number,
+    uptime: number,
+    diskwrite: number,
+    disk: number,
+    netin: number,
+    diskread: number,
+    name: string,
+    cpu: number,
+    maxmem: number,
+    pid: number,
+    mem: number,
+    netout: number,
+    cpus: number,
+    vmid: number,
+    status: string,
+    tags: string
 }
 
-export interface Follows {
-    NumFollowers: number;
-    PublicKeyToProfileEntry: {}
+export interface vmStatusCurrent {
+   
+    status: string,
+    vmid: number,
+    agent: boolean,
+    cpus: number,
+    lock: string,
+    maxdisk: number,
+    maxmem: number,
+    name: string,
+    tags: string,
+    uptime: number
 }
 
-export interface RandomUsers {
-    id: string;
-    name: string;
-    image: string;
-}
-
-export interface CropperDimensions {
-    height?: number | null;
-    width?: number | null;
-    left?: number | null;
-    top?: number | null;
-}
-
-export interface ShowErrorObject {
-    type: string;
-    message: string;
-}
-
-export interface Like {
-    id: string;
-    user_id: string;
-    post_id: string;
-}
-
-export interface Post {
-    id: string;
-    user_id: string;
-    video_url: string;
-    text: string;
-    created_at: string;
-}
-
-export interface Comment {
-    id: string;
-    user_id: string;
-    post_id: string;
-    text: string;
-    created_at: string;
-}
-
-export interface CommentWithProfile {
-    id: string;
-    user_id: string;
-    post_id: string;
-    text: string;
-    created_at: string;
-    profile: {
-        user_id: string;
-        name: string;
-        image: string;
-    }
-}
-
-export interface PostWithProfile {
-    id: string;
-    user_id: string;
-    video_url: string;
-    text: string;
-    created_at: string;
-    profile: {
-        user_id: string;
-        name: string;
-        image: string;
-    }
-}
-
-export interface UploadError {
-    type: string;
-    message: string;
+export interface myCustomVMInfo {
+    name: string,
+    ram: number,
+    cpus: number,
+    ssd_size: number,
+    ipv4: string,
+    ipv6: string,
+    expiration_date: string,
+    vmid: number,
+    status: string
 }
 
 //////////////////////////////////////////////////////////
@@ -108,19 +69,6 @@ export interface UploadError {
 
 //COMPONENT TYPES
 
-export interface CommentsHeaderCompTypes {
-    params: {userName: string; postId: string; };
-    post: PostWithProfile
-}
-
-export interface pendingPostListTypes {
-    pendingPosts: [ pendingPostTypes ]
-}
-export interface pendingPostTypes {
-    videoID: GetVideoStatusRequest;
-    caption: string;
-
-}
 
 export interface arrayOfServerTypes {
     serverInfo: serverType[]
@@ -135,56 +83,6 @@ export interface serverType {
     priceInTokens: number;
 }
 
-export interface CommentsCompTypes {
-    params: {userName: string; postId: string; };
-}
-
-export interface SingleCommentCompTypes {
-    params: {userName: string; postId: string;};
-    comment: CommentWithProfile
-}
-
-export interface PostMainCompTypes {
-    post: PostEntryResponse
-}
-
-export interface PostMainCompTypes2 {
-    post: PostEntryResponseGQL
-}
-export interface PostMainLikesCompTypes {
-    post: PostEntryResponse
-}
-
-export interface PostPageTypes {
-    params: { postHash: string; };
-}
-
-export interface PostUserCompTypes {
-    post: Post;
-}
-
-export interface ProfilePageTypes {
-    params: { id: string; };
-}
-
-// Layout Include Types
-export interface MenuItemsTypes {
-    iconString: string,
-    colorString: string,
-    sizeString: string
-}
-
-export interface MenuItemFollowCompTypes {
-    user: RandomUsers
-}
-
-export interface TextInputCompTypes {
-    string: string;
-    inputType: string;
-    placeholder: string;
-    onUpdate: (newValue: string) => void;
-    error: string;
-}
 
 // DeSo Types
 export interface DeSoKeys{
@@ -223,8 +121,6 @@ export interface DeSoKeys{
             IsValid: boolean
         }
     }
-   
-
 
 export interface Profile {
     PublicKeyBase58Check: string;

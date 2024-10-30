@@ -1,3 +1,4 @@
+"use client"
 import { useUser } from "@/app/context/user";
 import { HiServerStack } from "react-icons/hi2";
 import { RiTokenSwapLine } from "react-icons/ri";
@@ -9,7 +10,7 @@ import { useGeneralStore } from "@/app/stores/general";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function ItemCard (serverInfo: serverType) {
-    const {desoPriceUSD, setIsVisible, tokenPrice, setTokenPrice, setCurrency, setDesoPrice, setServerType} = useGeneralStore()
+    const {desoPriceUSD, setIsVisible, tokenPrice, setTokenPrice, setCurrency, setDesoPrice, setServerTypeInfo} = useGeneralStore()
     const tokenPriceLocal = ((serverInfo.price / .01 ) / 2).toFixed(2)
     const desoPriceLocal = (serverInfo.price / (desoPriceUSD / 100 )).toFixed(2)
     const contextUser = useUser()
@@ -20,20 +21,20 @@ export default function ItemCard (serverInfo: serverType) {
                 desoPriceUSD > 0  ? (
                 <>
                 <div className="flex item-card p-4 border-slate-700 border flex-col items-center bg-slate-800 rounded-xl w-[18em] ">
-                <HiServerStack className="" size="150" />
+                <HiServerStack className="" size="75" />
                 <p className="text-xl pb-2 text-center">{serverInfo.name}</p>
-                <div className="flex justify-center items-center gap-4 p-4 bg-slate-700 mb-4 rounded-xl">
+                <div className="flex justify-center items-center gap-8 p-4 bg-slate-700 mb-4 rounded-xl">
                     <div className="flex flex-col items-center">
                     <FaMemory size={32} />
-                    <p className="text-sm text-center">{serverInfo.memory} GB</p>
+                    <p className="text-sm text-center mt-4">{serverInfo.memory} GB</p>
                     </div>
-                    <div className="flex flex-col items-center ">
+                    <div className="flex flex-col items-center">
                     <FiCpu size={32} />
-                    <p className="text-sm text-center">{serverInfo.vcpu} vCPU</p>
+                    <p className="text-sm text-center mt-4">{serverInfo.vcpu} vCPU</p>
                     </div>
                     <div className="flex flex-col items-center ">
                     <RiHardDrive3Line size={32}/>
-                    <p className="text-sm text-center">{serverInfo.ssd} GB</p>
+                    <p className="text-sm text-center mt-4">{serverInfo.ssd} GB</p>
                     </div>
                     </div>
                 <div id="bottom" className="flex justify-between w-full pr-2 pl-2">
@@ -48,7 +49,7 @@ export default function ItemCard (serverInfo: serverType) {
                             setIsVisible(true)
                             setTokenPrice(tokenPriceLocal)
                             setCurrency('token')
-                            setServerType(serverInfo.name)
+                            setServerTypeInfo(serverInfo)
                             }}>
                         <span className="text-md mr-1">{Number(tokenPriceLocal).toLocaleString()}</span>
                         <RiTokenSwapLine className="" size="20" />
@@ -65,7 +66,7 @@ export default function ItemCard (serverInfo: serverType) {
                             setIsVisible(true)
                             setDesoPrice(desoPriceLocal)
                             setCurrency('deso')
-                            setServerType(serverInfo.name)
+                            setServerTypeInfo(serverInfo)
                             }}>
                         <span className="text-md mr-2">{desoPriceLocal}</span>
                         <img src="../../../images/desologo.svg" className="h-6" alt=""/>
@@ -88,7 +89,7 @@ export default function ItemCard (serverInfo: serverType) {
                     </div>
                     <div className="flex flex-col items-center ">
                     <FiCpu size={32} />
-                    <p className="text-lg text-center">{serverInfo.vcpu} vCPU</p>
+                    <p className="text-lg text-center mt-2">{serverInfo.vcpu} vCPU</p>
                     </div>
                     <div className="flex flex-col items-center ">
                     <RiHardDrive3Line size={32}/>

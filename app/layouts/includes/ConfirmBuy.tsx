@@ -1,3 +1,4 @@
+"use client"
 import { buyInfoType } from "@/app/types";
 
 

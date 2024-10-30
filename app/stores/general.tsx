@@ -1,16 +1,8 @@
 import {create} from 'zustand';
 import { persist, devtools, createJSONStorage } from 'zustand/middleware';
-import { getMiddlewareRouteMatcher } from 'next/dist/shared/lib/router/utils/middleware-route-matcher';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-
-const {setItem, getItem} = useLocalStorage('pendingUploads')
+import { serverType } from '../types';
 
 interface GeneralStore {
-    isLoginOpen: boolean,
-    isGiveDiamondsOpen: boolean,
-    isEditProfileOpen: boolean,
-    areCommentsOpen: boolean,
-    clickedPostIdComments: string,
     desoPriceUSD: number,
     isVisible: boolean,
     tokenPrice: string,
@@ -19,15 +11,9 @@ interface GeneralStore {
     walletBalanceTokens: number,
     walletBalanceDeSo: number,
     searchTerm: string,
-    serverType: string,
     isConfirmedVisible: boolean,
+    serverTypeInfo: serverType,
 
-
-    setIsLoginOpen: (val: boolean) => void,
-    setIsGiveDiamondsOpen: (val: boolean) => void,
-    setIsEditProfileOpen: (val: boolean) => void,
-    setAreCommentsOpen: (val: boolean) => void,
-    setclickedPostIdComments: (val: string) => void,
     setDesoPriceUSD: (val: number) => void,
     setIsVisible: (val: boolean) => void,
     setTokenPrice: (val: string) => void,
@@ -36,21 +22,15 @@ interface GeneralStore {
     setWalletBalanceTokens: (val: number) => void,
     setWalletBalanceDeSo: (val: number) => void,
     setSearchTerm: (val: string) => void,
-    setServerType: (val: string) => void,
     setIsConfirmedVisible: (val: boolean) => void,
+    setServerTypeInfo: (val: serverType) => void,
+
 }
 
 export const useGeneralStore = create<GeneralStore>()(
     devtools(
         persist(
             (set) => ({
-                isLoginOpen: false,
-                isGiveDiamondsOpen: false,
-                isEditProfileOpen: false,
-                randomUsers: [],
-                areCommentsOpen: false,
-                clickedPostIdComments: '',
-                pendingPosts: [],
                 desoPriceUSD: 0,
                 isVisible: false,
                 isConfirmedVisible: false,
@@ -60,13 +40,15 @@ export const useGeneralStore = create<GeneralStore>()(
                 walletBalanceTokens: 0,
                 walletBalanceDeSo: 0,
                 searchTerm: '',
-                serverType: '',
+                serverTypeInfo: {
+                    name: '',
+                    memory: 0,
+                    vcpu: 0,
+                    ssd: 0,
+                    price: 0,
+                    priceInTokens: 0
+                },
 
-                setIsLoginOpen: (val: boolean) => set({ isLoginOpen: val }),
-                setIsGiveDiamondsOpen: (val: boolean) => set({ isGiveDiamondsOpen: val }),
-                setIsEditProfileOpen: (val: boolean) => set({ isEditProfileOpen: val }),
-                setAreCommentsOpen: (val: boolean) => set({ areCommentsOpen: val }),
-                setclickedPostIdComments: (val: string) => set({ clickedPostIdComments: val }),
                 setDesoPriceUSD: (val:number) => set({ desoPriceUSD: val}),
                 setIsVisible: (val: boolean) => set({ isVisible: val}),
                 setTokenPrice: (val: string) => set({ tokenPrice: val}),
@@ -75,8 +57,8 @@ export const useGeneralStore = create<GeneralStore>()(
                 setWalletBalanceTokens: (val: number) => set ({ walletBalanceTokens: val}),
                 setWalletBalanceDeSo: (val: number) => set ({ walletBalanceDeSo: val}),
                 setSearchTerm: (val: string) => set({ searchTerm: val}),
-                setServerType: (val: string) => set({ serverType: val}),
                 setIsConfirmedVisible: (val: boolean) => set({ isConfirmedVisible: val}),
+                setServerTypeInfo: (val: serverType) => set({ serverTypeInfo: val}),
                 }),
                 
                 

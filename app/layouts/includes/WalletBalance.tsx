@@ -1,3 +1,5 @@
+"use client"
+
 import { useUser } from "@/app/context/user";
 import { GET_TOKEN_AMOUNT } from "@/app/graphql/GetWalletInfo";
 import { useGeneralStore } from "@/app/stores/general";
@@ -11,7 +13,8 @@ import { RiTokenSwapLine } from "react-icons/ri";
 export default function WalletBalance () { 
 
     const contextUser = useUser()
-    const {setWalletBalanceDeSo, setWalletBalanceTokens} = useGeneralStore()
+    const setWalletBalanceDeSo = useGeneralStore((store) => store.setWalletBalanceDeSo)
+    const setWalletBalanceTokens = useGeneralStore((store) => store.setWalletBalanceTokens)
    
     const { loading, error, data } = useQuery(GET_TOKEN_AMOUNT, {
         variables: {
@@ -33,9 +36,7 @@ export default function WalletBalance () {
       });
 
       useEffect(() => {
-        if (!contextUser) {
-          return
-        }
+       
         if (data) {
           data.tokenBalances.nodes.map((walletinfo: WalletInfo) => {
             setWalletBalanceDeSo(data.desoBalance.balanceNanos)
@@ -43,24 +44,28 @@ export default function WalletBalance () {
           })
         }
         
-      },[data])
+      },[])
       
     return(
+
         data ? (
             <>
            <p className="mt-20 flex flex-col w-full text-sky-200 text-center text-xl pb-2">Wallet Balances</p>
            {data.tokenBalances.nodes.length > 0 ? (
                
                 data.tokenBalances.nodes.map((walletinfo: WalletInfo) => (
+                 
                   
                     <div className="flex justify-center items-center text-sky-200" key={walletinfo.balanceNanos}>
                         <RiTokenSwapLine className="" size="20" /> <span>DeSoHosting Tokens:</span>
                         <span className="ml-2 mr-2">{(walletinfo.balanceNanos / 1000000000000000000).toLocaleString()} </span>
                         <Link className="text-xs " target="_blank" href={"https://openfund.com/d/DeSoHosting"}>Buy Tokens</Link>
                     </div>
-               
+                    
+                    
             
             ))
+                  
            
                 
                 ): (
@@ -77,14 +82,14 @@ export default function WalletBalance () {
              <div className="flex justify-center items-center text-sky-200">
                   <img src="../../../images/desologo.svg" className="h-6" alt=""/>
                   <span>DeSo:</span>
-                  <span className="ml-2">{data.desoBalance.balanceNanos / 1000000000}</span>
+                  <span className="ml-2">{data?.desoBalance?.balanceNanos / 1000000000}</span>
                   
                  </div>
            
         </>
         ) : (
             <>
-            <p className="mt-20 flex flex-col w-full text-sky-200 text-center text-xl pb-2">Your Wallet Balances</p>
+            <p className="mt-20 flex flex-col w-full text-sky-200 text-center text-xl pb-2">Wallet Balances</p>
             <div className="flex justify-center items-center text-sky-200">
                         <RiTokenSwapLine className="" size="20" /> <span>DeSoHosting Tokens:</span>
                         <span className="ml-2 mr-2">{0} </span>
@@ -95,7 +100,7 @@ export default function WalletBalance () {
                  <span>DeSo:</span>
                  <span className="ml-2">{0}</span>
                  
-                </div>    
+                </div> 
                 </>
         )
 
