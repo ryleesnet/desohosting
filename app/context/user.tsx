@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation";
-import { Profile, UserContextTypes, State, Follows } from "../types";
+import { Profile, UserContextTypes, State } from "../types";
 import { useState, useEffect, useRef, createContext, ReactNode, useContext } from "react";
 import { getSingleProfile, createSubmitPostTransaction, avatarUrl, timestampToDate } from '@/app/deso/deso-api';
 import { StoredUser, configure, identity, SubscriberNotification } from "deso-protocol";
@@ -18,8 +18,6 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
     const router = useRouter()
     const [loggedin, setLoggedIn] = useState<boolean>(false)
     const [user, setUser] = useState<Profile | null>(null)
-    const [followers, setFollowers] = useState<Follows | null>(null)
-    const [following, setFollowing] = useState<Follows | null>(null)
     const [authkeys, setAuthkeys] = useState<SubscriberNotification | null>(null)
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const isRunned = useRef(false);
@@ -189,7 +187,7 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
     
 
     return (
-        <UserContex.Provider value={ { user, authkeys, followers, following, login, logout, checkUser}}>
+        <UserContex.Provider value={ { user, authkeys, login, logout, checkUser}}>
             {children}
         </UserContex.Provider>
     )

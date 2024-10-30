@@ -180,9 +180,6 @@ export interface Profile {
     
  }
 
- export interface isFollowingPublickKey {
-    IsFollowing: boolean
- }
 
 
  export interface PostEntryResponse {
