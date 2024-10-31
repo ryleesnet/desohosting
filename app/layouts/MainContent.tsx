@@ -3,13 +3,12 @@
 import { RiTokenSwapLine } from "react-icons/ri";
 import { useGeneralStore } from "../stores/general";
 import { arrayOfServerTypes } from "../types";
-import ItemCard from "./includes/ItemCard";
 import Popup from "./includes/Popup";
 import { useUser } from "../context/user";
 import { burnDeSoToken, identity, sendDeso, SendDeSoRequest, submitPost, SubmitPostRequestParams, TransactionSpendingLimitResponseOptions, TxRequestWithOptionalFeesAndExtraData } from "deso-protocol";
 import PopupThanks from "./includes/PopupThanks";
 import Link from "next/link";
-import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, from, useQuery } from "@apollo/client";
+import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache, from } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import WalletBalance from "./includes/WalletBalance";
 import CreateVMs from "../hooks/createVMs";

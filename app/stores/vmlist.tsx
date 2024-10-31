@@ -14,7 +14,7 @@ export const useVMListStore = create<VMListStore>()(
         persist(
             (set) => ({
                 vmListStatusCurrent: [],
-                setVMListStatusCurrent: (val: myCustomVMInfo[]) => set({ vmListStatusCurrent: val})
+                setVMListStatusCurrent: (val: myCustomVMInfo[]) => set({ vmListStatusCurrent: val}),
                 }),
                 
                 
