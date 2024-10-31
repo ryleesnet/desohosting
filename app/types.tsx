@@ -1,4 +1,4 @@
-import { SubscriberNotification, GetVideoStatusRequest } from "deso-protocol";
+import { SubscriberNotification } from "deso-protocol";
 
 export interface UserContextTypes {
     user: Profile | null;

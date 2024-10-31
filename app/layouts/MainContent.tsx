@@ -275,7 +275,7 @@ export default function MainContent () {
                 </div>
                 </>
             </PopupThanks>
-        <CurrentVms />
+            <CurrentVms />
         <NewVms />
         </ApolloProvider>
      </>

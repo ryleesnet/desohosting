@@ -44,7 +44,7 @@ export default function WalletBalance () {
           })
         }
         
-      },[])
+      },[data])
       
     return(
 
