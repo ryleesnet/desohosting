@@ -1,21 +1,20 @@
 "use client"
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {BiSearch, BiUser} from "react-icons/bi"
-import { FiLogOut } from 'react-icons/fi'
+import {BiSearch} from "react-icons/bi";
+import { FiLogOut } from 'react-icons/fi';
 import React, { useEffect, useState } from "react";
 import { avatarUrl } from '@/app/deso/deso-api';
-import { useUser } from "@/app/context/user";
 import { useGeneralStore } from "@/app/stores/general";
 import { FaServer } from "react-icons/fa";
-import { getExchangeRates } from "deso-protocol";
+import { configure, getExchangeRates, identity } from "deso-protocol";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 
 
 export default function TopNav () {
 
-    const contextUser = useUser()
+    const APP_NAME = 'DeSoHosting by @ryleesnet';
     const {desoPriceUSD, setDesoPriceUSD} = useGeneralStore()
     let [showMenu, setShowMenu] = useState<boolean>(false)
     let { setSearchTerm } = useGeneralStore()
@@ -28,6 +27,8 @@ export default function TopNav () {
 
     }
 
+    const [ loggedin, setLoggedIn] = useState(false)
+
 
 
     const desoPrice = () => {
@@ -39,6 +40,9 @@ export default function TopNav () {
 
     useEffect(() => {
         desoPrice()
+        if (localStorage.getItem('desoActivePublicKey')){
+            setLoggedIn(true)
+        }
     },[])
 
     return (
@@ -69,11 +73,29 @@ export default function TopNav () {
 
                 <div className="flex items-center gap-3">
                    
-                    {!contextUser?.user?.PublicKeyBase58Check ? (
+                    {!loggedin ? (
                         <div className="flex items-center">
                         <button
                          className="flex items-centered bg-sky-700 text-sky-200 border rounded-md px-3 py-[6px] hover:bg-sky-800"
-                         onClick={() => contextUser?.login()}
+                         onClick={() => {
+                            configure({
+                                spendingLimitOptions: {
+                                  GlobalDESOLimit: 1 * 1e9, // 1 Deso
+                                  TransactionCountLimitMap: {
+                                    BASIC_TRANSFER: 'UNLIMITED',
+                                    SUBMIT_POST: 'UNLIMITED',
+                                  },
+                                  DAOCoinOperationLimitMap: {
+                                    'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
+                                      'burn' : 'UNLIMITED'
+                                    }
+                                  }
+                              },
+                                appName: APP_NAME,
+                                nodeURI: 'https://desonode.rylees.net',
+                                });
+                            
+                            identity.login().then((res) => {setLoggedIn(true)}).catch((error) => {console.log(error)})}}
                          >
                              <span className="whitespace-nowrap mx-4 font-medium bg-transparent text-[15px]">
                                 Login
@@ -88,23 +110,13 @@ export default function TopNav () {
                                 onClick={() => setShowMenu(showMenu = !showMenu)}
                                 className="mt-1 border border-gray-200 rounded-full"
                                 >
-                                    <img className="rounded-full w-[35px] h-[35px]" src={`${avatarUrl(contextUser?.user)}`} />
+                                    <img className="rounded-full w-[35px] h-[35px]" src={`${avatarUrl(localStorage.getItem('desoActivePublicKey'))}`} />
                                 </button>
                                 {showMenu ? (
                                     <div className="absolute bg-slate-800 text-slate-400 rounded-lg py-1.5 w-[200px] shadow-xl border top[40px] right-0">
                                     <button
-                                        onClick={() => {
-                                            router.push(`/profile/${contextUser?.user?.Username}`)
-                                            setShowMenu(false)
-                                        }}
-                                        className="flex items-center w-full justify-start py-3 px-2 hover:bg-gray-100 cursor-pointer"
-                                    >
-                                        <BiUser size="20" />
-                                        <span className="pl-2 font-semibold text-sm">Profile</span>
-                                    </button>
-                                    <button
                                         onClick={async () => {
-                                            contextUser?.logout()
+                                            identity.logout().then((res) => {setLoggedIn(false)}).catch((error) => {console.log(error)})
                                             setShowMenu(false)
                                         }}
                                         className="flex items-center w-full justify-start py-3 px-2 hover:bg-gray-100 cursor-pointer"

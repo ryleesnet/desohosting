@@ -14,6 +14,7 @@ import WalletBalance from "./includes/WalletBalance";
 import CreateVMs from "../hooks/createVMs";
 import CurrentVms from "./includes/CurrentVms";
 import NewVms from "./includes/NewVms";
+import { useEffect, useState } from "react";
 
 export default function MainContent () { 
     const setIsVisible = useGeneralStore((store) => store.setIsVisible)
@@ -32,31 +33,11 @@ export default function MainContent () {
     
 
     const contextUser = useUser()
+    const [ loggedin, setLoggedIn] = useState(false)
     const walletBalanceTokensConverted = (walletBalanceTokens / 1000000000000000000 )
     const walletBalanceDesoConverted = (walletBalanceDeSo / 1000000000 )
 
-    const data: arrayOfServerTypes = {
-        
-        serverInfo: [
-          { name: "Mini Server", memory: 1, vcpu: 1, ssd: 32, price: 5, priceInTokens: 350 },
-          { name: "S1 Server", memory: 2, vcpu: 2, ssd: 32, price: 7, priceInTokens: 350 },
-          { name: "S2 Server", memory: 4, vcpu: 2, ssd: 60, price: 12, priceInTokens: 525  },
-          { name: "S3 Server", memory: 8, vcpu: 4, ssd: 60, price: 24, priceInTokens: 700  },
-          { name: "S4 Server", memory: 16, vcpu: 8, ssd: 60, price: 48, priceInTokens: 700  },
-          //{ name: "N1 Node Server", memory: 32, vcpu: 8, ssd: 500, price: 150, priceInTokens: 875  },
-          //{ name: "N2 Node Server", memory: 64, vcpu: 8, ssd: 1000, price: 250, priceInTokens: 1050  },
-          //{ name: "N3 Node Server", memory: 128, vcpu: 16, ssd: 1000, price: 500, priceInTokens: 2100  }
-        ]
-      };
 
-      const filteredData = data.serverInfo.filter(item => {
-        const memory = item.memory.toString().includes(searchTerm); 
-        const vcpu = item.vcpu.toString().includes(searchTerm); 
-        const ssd = item.ssd.toString().includes(searchTerm);
-        const nameMatch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
-        return memory || ssd || nameMatch || nameMatch;
-      }
-    )
     const errorLink = onError((e) => {
         //console.log(e)
         })
@@ -73,7 +54,7 @@ export default function MainContent () {
     
       function buyWithTokens (tokens: number, payment_plan: string) {
 
-        if (!contextUser?.user) {
+        if (!loggedin) {
             contextUser?.login()
             return
         }
@@ -122,7 +103,7 @@ export default function MainContent () {
             submitPost(postdata).then((res => {
                 setIsVisible(false)
                 setIsConfirmedVisible(true)
-                CreateVMs(serverTypeInfo, payment_plan, String(res.submittedTransactionResponse?.TxnHashHex), String(localStorage.getItem("desoActivePublicKey")), String(contextUser.user?.Username))
+                CreateVMs(serverTypeInfo, payment_plan, String(res.submittedTransactionResponse?.TxnHashHex), String(localStorage.getItem("desoActivePublicKey")), String(contextUser?.user?.Username))
             })).catch(error => {
                 console.log(error)
                 setIsVisible(false)
@@ -178,6 +159,10 @@ export default function MainContent () {
             setIsVisible(false)
         }) 
     }
+    useEffect(() => {
+        if (localStorage.getItem('desoActivePublicKey')){
+            setLoggedIn(true)}
+    },[])
     
    
    

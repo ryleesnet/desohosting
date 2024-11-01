@@ -175,8 +175,10 @@ const UserProvider: React.FC<{ children: ReactNode }> = ( { children }) => {
 
             
   
-        identity.login()
-        //await checkUser()
+        identity.login().catch((error) => {
+          console.log(error)
+        })
+        await checkUser()
 
     }
 

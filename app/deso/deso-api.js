@@ -268,18 +268,18 @@ export async function getSinglePost(settings) {
 
 }
 
-export const avatarUrl = (Profile) => {
+export const avatarUrl = (PublicKeyBase58Check) => {
 
-    if(Profile){
-        let avatarImage = `${apiPrefix}get-single-profile-picture/${Profile.PublicKeyBase58Check}?fallback=${webAppPrefix}/assets/img/default_profile_pic.png`
+    if(PublicKeyBase58Check){
+        let avatarImage = `${apiPrefix}get-single-profile-picture/${PublicKeyBase58Check}?fallback=${webAppPrefix}/assets/img/default_profile_pic.png`
 
-        if(Profile.ExtraData && Profile.ExtraData.LargeProfilePicURL){
+        /* if(Profile.ExtraData && Profile.ExtraData.LargeProfilePicURL){
             avatarImage = Profile.ExtraData.LargeProfilePicURL
         }
     
         if(Profile.ExtraData && Profile.ExtraData.NFTProfilePictureUrl){
             avatarImage = Profile.ExtraData.NFTProfilePictureUrl 
-        }
+        } */
     
         return avatarImage
     } else {
