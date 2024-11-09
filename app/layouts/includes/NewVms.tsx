@@ -27,6 +27,17 @@ export default function NewVms () {
     const isConfirmedVisible = useGeneralStore((store) => store.isConfirmedVisible)
     const setIsConfirmedVisible = useGeneralStore((store) => store.setIsConfirmedVisible)
     
+    const characters = 'ABCDEFabcdef0123456789';
+    function generateRandomString(length: number) {
+        let result = '';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+      }
+
+    const vmHostname: string = generateRandomString(12)
 
     const contextUser = useUser()
     const walletBalanceTokensConverted = (walletBalanceTokens / 1000000000000000000 )
@@ -119,7 +130,7 @@ export default function NewVms () {
             submitPost(postdata).then((res => {
                 setIsVisible(false)
                 setIsConfirmedVisible(true)
-                CreateVMs(serverTypeInfo, payment_plan, String(res.submittedTransactionResponse?.TxnHashHex), String(localStorage.getItem("desoActivePublicKey")), String(contextUser.user?.Username))
+                CreateVMs(serverTypeInfo, payment_plan, String(res.submittedTransactionResponse?.TxnHashHex), String(localStorage.getItem("desoActivePublicKey")), String(contextUser.user?.Username), vmHostname)
             })).catch(error => {
                 console.log(error)
                 setIsVisible(false)
