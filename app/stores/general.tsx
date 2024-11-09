@@ -13,6 +13,7 @@ interface GeneralStore {
     searchTerm: string,
     isConfirmedVisible: boolean,
     serverTypeInfo: serverType,
+    loggedin: boolean
 
     setDesoPriceUSD: (val: number) => void,
     setIsVisible: (val: boolean) => void,
@@ -24,7 +25,7 @@ interface GeneralStore {
     setSearchTerm: (val: string) => void,
     setIsConfirmedVisible: (val: boolean) => void,
     setServerTypeInfo: (val: serverType) => void,
-
+    setLoggedin: (val: boolean) => void
 }
 
 export const useGeneralStore = create<GeneralStore>()(
@@ -48,6 +49,7 @@ export const useGeneralStore = create<GeneralStore>()(
                     price: 0,
                     priceInTokens: 0
                 },
+                loggedin: false,
 
                 setDesoPriceUSD: (val:number) => set({ desoPriceUSD: val}),
                 setIsVisible: (val: boolean) => set({ isVisible: val}),
@@ -59,6 +61,7 @@ export const useGeneralStore = create<GeneralStore>()(
                 setSearchTerm: (val: string) => set({ searchTerm: val}),
                 setIsConfirmedVisible: (val: boolean) => set({ isConfirmedVisible: val}),
                 setServerTypeInfo: (val: serverType) => set({ serverTypeInfo: val}),
+                setLoggedin: (val: boolean) => set ({ loggedin: val})
                 }),
                 
                 

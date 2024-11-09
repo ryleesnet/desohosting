@@ -8,6 +8,7 @@ import stopVM from "@/app/hooks/stopVM";
 import startVM from "@/app/hooks/startVM";
 import { myCustomVMInfo, vmConfig, vmStatusCurrent } from "@/app/types";
 import deleteVM from "@/app/hooks/deleteVM";
+import { FaPencilAlt } from "react-icons/fa";
 
 export default function VMCard (VMStatusCurrent: myCustomVMInfo) {
     const contextUser = useUser()
@@ -34,10 +35,15 @@ export default function VMCard (VMStatusCurrent: myCustomVMInfo) {
         
                 contextUser ? (
                 <>
-                <div className="flex item-card p-4 border-slate-700 border flex-col items-center bg-slate-800 rounded-xl w-[20em] ">
+                <div className={VMStatusCurrent.status === "creating" ? "flex item-card p-4 border-slate-700 border flex-col items-center bg-slate-800 rounded-xl w-[20em] animate-pulse" : "flex item-card p-4 border-slate-700 border flex-col items-center bg-slate-800 rounded-xl w-[20em]"}>
                 <HiServerStack className={VMStatusCurrent.status === "running" ? "text-green-700" : "text-yellow-700"} size="75" />
-
-                <p className="text-xl pb-2 text-center">{VMStatusCurrent.name}</p>
+                <div className="flex pt-4 pb-4 w-full items-center justify-center">
+                    <p className="text-xl text-center">{VMStatusCurrent.name}</p>
+                    <FaPencilAlt className="cursor-pointer w-[20px] ml-4" size={20} />
+                </div>
+                
+                    
+                
                 <div className="flex flex-col p-4 bg-slate-700 mb-4 rounded-xl items-center w-full">
                     <div className="flex justify-center items-center gap-8 ">
                         <div className="flex flex-col items-center">
@@ -59,7 +65,7 @@ export default function VMCard (VMStatusCurrent: myCustomVMInfo) {
                         {VMStatusCurrent.ipv4 ? (
                             <p className="text-sm text-center ml-4">{VMStatusCurrent.ipv4}</p>
                         ) : (
-                            <p className="text-sm text-center ml-4">Not Running</p>
+                            <p className="text-sm text-center ml-4">{VMStatusCurrent.status.toUpperCase()}</p>
                         )}
                         
                         </div>

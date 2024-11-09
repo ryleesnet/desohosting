@@ -15,6 +15,7 @@ import CreateVMs from "../hooks/createVMs";
 import CurrentVms from "./includes/CurrentVms";
 import NewVms from "./includes/NewVms";
 import { useEffect, useState } from "react";
+import { useVMListStore } from "../stores/vmlist";
 
 export default function MainContent () { 
     const setIsVisible = useGeneralStore((store) => store.setIsVisible)
@@ -30,12 +31,24 @@ export default function MainContent () {
     const setServerTypeInfo = useGeneralStore((store) => store.setServerTypeInfo)
     const isConfirmedVisible = useGeneralStore((store) => store.isConfirmedVisible)
     const setIsConfirmedVisible = useGeneralStore((store) => store.setIsConfirmedVisible)
+    const setPendingVMStatus = useVMListStore((store) => store.setPendingVMStatus)
     
 
     const contextUser = useUser()
     const [ loggedin, setLoggedIn] = useState(false)
     const walletBalanceTokensConverted = (walletBalanceTokens / 1000000000000000000 )
     const walletBalanceDesoConverted = (walletBalanceDeSo / 1000000000 )
+    const characters = 'ABCDEFabcdef0123456789';
+    function generateRandomString(length: number) {
+        let result = '';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+      }
+
+      const vmHostname: string = generateRandomString(12)
 
 
     const errorLink = onError((e) => {
@@ -65,6 +78,9 @@ export default function MainContent () {
                 }
         }
     }
+
+    
+
         
         if (identity.hasPermissions(permToCheck)) {
 
@@ -99,11 +115,21 @@ export default function MainContent () {
                 }
 
             }
+            setPendingVMStatus({
+                name: vmHostname,
+                ram: (serverTypeInfo.memory * 1073741824),
+                cpus: serverTypeInfo.vcpu,
+                ssd_size: (serverTypeInfo.ssd * 1073741824),
+                ipv4: "creating",
+                ipv6: "creating",
+                expiration_date: "",
+                vmid: 0,
+                status: "creating"})
             
             submitPost(postdata).then((res => {
                 setIsVisible(false)
                 setIsConfirmedVisible(true)
-                CreateVMs(serverTypeInfo, payment_plan, String(res.submittedTransactionResponse?.TxnHashHex), String(localStorage.getItem("desoActivePublicKey")), String(contextUser?.user?.Username))
+                CreateVMs(serverTypeInfo, payment_plan, String(res.submittedTransactionResponse?.TxnHashHex), String(localStorage.getItem("desoActivePublicKey")), String(contextUser?.user?.Username), vmHostname).then((res) => {setPendingVMStatus(null)})
             })).catch(error => {
                 console.log(error)
                 setIsVisible(false)
@@ -114,6 +140,7 @@ export default function MainContent () {
             setIsVisible(false)
         })
     }
+    
         }
         
         
@@ -240,6 +267,22 @@ export default function MainContent () {
                      setIsVisible(false)
                      setTokenPrice('')
                      setDesoPrice('')
+                     setPendingVMStatus({
+                        name: vmHostname,
+                        ram: (serverTypeInfo.memory * 1073741824),
+                        cpus: serverTypeInfo.vcpu,
+                        ssd_size: (serverTypeInfo.ssd * 1073741824),
+                        ipv4: "CREATING",
+                        ipv6: "CREATING",
+                        expiration_date: "",
+                        vmid: 0,
+                        status: "creating"})
+                     CreateVMs(serverTypeInfo, "payment_plan", String("submittedTransactionResponse"), String(localStorage.getItem("desoActivePublicKey")), String(contextUser?.user?.Username), vmHostname).then((res) => {setPendingVMStatus(null)})
+                     }}> Test</button>
+                     <button className="m-2 p-2 rounded-xl bg-red-800 text-sky-200" onClick={() => {
+                     setIsVisible(false)
+                     setTokenPrice('')
+                     setDesoPrice('')
                      }}> Cancel</button>
          </div>
                       
@@ -249,7 +292,7 @@ export default function MainContent () {
                 <div className="flex flex-col items-center">
                     <div className="flex mb-4 text-center">
                         <div>
-                        Thanks for using DeSoHosting! You will be contacted via Direct Message in DeSo with ssh credentials soon! If you have any questions please reach out to
+                        Thanks for using DeSoHosting! If you have any questions please reach out to
                         <Link className="ml-0.5" href="https://desocialworld.com/u/DeSoHosting"> @DeSoHosting</Link> or
                         <Link className="ml-0.5" href="https://desocialworld.com/u/ryleesnet">@ryleesnet</Link></div>
                             
@@ -260,7 +303,7 @@ export default function MainContent () {
                 </div>
                 </>
             </PopupThanks>
-            <CurrentVms />
+            {loggedin ? (<CurrentVms />) : null}
         <NewVms />
         </ApolloProvider>
      </>

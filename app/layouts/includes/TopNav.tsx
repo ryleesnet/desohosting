@@ -15,19 +15,18 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 export default function TopNav () {
 
     const APP_NAME = 'DeSoHosting by @ryleesnet';
-    const {desoPriceUSD, setDesoPriceUSD} = useGeneralStore()
+    const desoPriceUSD = useGeneralStore((store) => store.desoPriceUSD)
+    const setDesoPriceUSD = useGeneralStore((store) => store.setDesoPriceUSD)
     let [showMenu, setShowMenu] = useState<boolean>(false)
-    let { setSearchTerm } = useGeneralStore()
+    const setSearchTerm = useGeneralStore((store) => store.setSearchTerm)
 
-    const router = useRouter()
-    const pathname = usePathname()
     const handleSearchName = (event: {target: { value: string }}) => {
         setSearchTerm(event.target.value);
-        console.log(event.target.value)
 
     }
 
-    const [ loggedin, setLoggedIn] = useState(false)
+    const loggedin = useGeneralStore((store) => store.loggedin)
+    const setLoggedin = useGeneralStore((store) => store.setLoggedin)
 
 
 
@@ -41,7 +40,7 @@ export default function TopNav () {
     useEffect(() => {
         desoPrice()
         if (localStorage.getItem('desoActivePublicKey')){
-            setLoggedIn(true)
+            setLoggedin(true)
         }
     },[])
 
@@ -95,7 +94,7 @@ export default function TopNav () {
                                 nodeURI: 'https://desonode.rylees.net',
                                 });
                             
-                            identity.login().then((res) => {setLoggedIn(true)}).catch((error) => {console.log(error)})}}
+                            identity.login().then((res) => {setLoggedin(true)}).catch((error) => {console.log(error)})}}
                          >
                              <span className="whitespace-nowrap mx-4 font-medium bg-transparent text-[15px]">
                                 Login
@@ -116,7 +115,7 @@ export default function TopNav () {
                                     <div className="absolute bg-slate-800 text-slate-400 rounded-lg py-1.5 w-[200px] shadow-xl border top[40px] right-0">
                                     <button
                                         onClick={async () => {
-                                            identity.logout().then((res) => {setLoggedIn(false)}).catch((error) => {console.log(error)})
+                                            identity.logout().then((res) => {setLoggedin(false)}).catch((error) => {console.log(error)})
                                             setShowMenu(false)
                                         }}
                                         className="flex items-center w-full justify-start py-3 px-2 hover:bg-gray-100 cursor-pointer"

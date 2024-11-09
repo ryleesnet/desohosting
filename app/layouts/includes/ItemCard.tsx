@@ -10,7 +10,13 @@ import { useGeneralStore } from "@/app/stores/general";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function ItemCard (serverInfo: serverType) {
-    const {desoPriceUSD, setIsVisible, tokenPrice, setTokenPrice, setCurrency, setDesoPrice, setServerTypeInfo} = useGeneralStore()
+    const desoPriceUSD = useGeneralStore((store) => store.desoPriceUSD)
+    const setIsVisible = useGeneralStore((store) => store.setIsVisible)
+    const tokenPrice = useGeneralStore((store) => store.tokenPrice)
+    const setTokenPrice = useGeneralStore((store) => store.setTokenPrice)
+    const setCurrency = useGeneralStore((store) => store.setCurrency)
+    const setDesoPrice = useGeneralStore((store) => store.setDesoPrice)
+    const setServerTypeInfo = useGeneralStore((store) => store.setServerTypeInfo)
     const tokenPriceLocal = ((serverInfo.price / .01 ) / 2).toFixed(2)
     const desoPriceLocal = (serverInfo.price / (desoPriceUSD / 100 )).toFixed(2)
     const contextUser = useUser()

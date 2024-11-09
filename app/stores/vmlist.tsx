@@ -5,8 +5,10 @@ import { myCustomVMInfo, vmConfig, vmStatusCurrent } from '../types';
 interface VMListStore {
     
     vmListStatusCurrent: myCustomVMInfo[],
+    pendingVMStatus: myCustomVMInfo | null,
 
     setVMListStatusCurrent: (val: myCustomVMInfo[]) => void,
+    setPendingVMStatus:  (val: myCustomVMInfo | null) => void,
 }
 
 export const useVMListStore = create<VMListStore>()(
@@ -14,7 +16,10 @@ export const useVMListStore = create<VMListStore>()(
         persist(
             (set) => ({
                 vmListStatusCurrent: [],
+                pendingVMStatus: null,
+
                 setVMListStatusCurrent: (val: myCustomVMInfo[]) => set({ vmListStatusCurrent: val}),
+                setPendingVMStatus: (val: myCustomVMInfo | null) => set ({ pendingVMStatus: val})
                 }),
                 
                 
