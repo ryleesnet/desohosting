@@ -4,11 +4,11 @@ import { vmConfig, serverType } from "../types";
 import fs from 'fs';
 
 
-export default async function CreateVMs (serverInfo: serverType, payment_plan: string, last_payment_hex: string, pkey: string, username: string, vmHostname: string) { 
+export default async function CreateVMs (serverInfo: serverType, payment_plan: string, last_payment_hex: string, pkey: string, username: string, vmHostname: string, passwd: string) { 
     let nextAvailableId = 501;
 
     const baseAPI = "https://pve01.home.rylees.net/api2/json/nodes/pve01/qemu"
-   
+
     try {
         const response = await fetch(baseAPI, {
             method: 'GET',
@@ -43,7 +43,7 @@ async function processIpAddresses() {
     try {
       // Read the IP addresses from the file
       const data = await fs.promises.readFile('ip_addresses.txt', 'utf-8');
-      const ipAddresses = data.split('\n').filter(ip => ip.trim());
+      const ipAddresses: string[] = data.split('\n').filter(ip => ip.trim());
   
       // Extract the first IP and create a new array
       const nextIP = ipAddresses[0];
@@ -55,16 +55,14 @@ async function processIpAddresses() {
       // Write the remaining IPs back to the original file
       await fs.promises.writeFile('ip_addresses.txt', remainingIps.join('\n'));
   
-      console.log('First IP:', nextIP);
-      console.log('Remaining IPs:', remainingIps);
       return nextIP
     } catch (err) {
       console.error('Error:', err);
     }
   }
   
-const IP_ADDRESSES = await processIpAddresses()
-const ipconfig = "gw=107.131.170.206,ip=" + IP_ADDRESSES + "/28"
+const IP_ADDRESS = await processIpAddresses()
+const ipconfig = "gw=107.131.170.206,ip=" + IP_ADDRESS + "/28"
 const currentDate = new Date();
 const year = currentDate.getFullYear();
 const month = currentDate.getMonth() + 1; // Months are zero-indexed
@@ -83,7 +81,7 @@ const createVMdata = {
     };
     
 const configData = {
-    cipassword: "Testing123!",
+    cipassword: passwd,
     ciuser: username,
     net0: "model=virtio,bridge=vmbr1",
     ipconfig0: ipconfig,
@@ -95,60 +93,63 @@ const configData = {
 
 const delay = (ms: number)  => new Promise(res => setTimeout(res, ms));
 
-try {
-    const response = await fetch(baseAPI, {
-        method: 'POST',
-        headers: {
-            Authorization: String(process.env.PVE_TOKEN),
-            'Content-Type': 'application/json'         
-            },
-        body: JSON.stringify(createVMdata)
-        });
-
-    const resJson = await response.json();
-        //console.log(resJson);
-    } catch (error) {
-        console.error("Error:", error);
-    }
-
-try {
-    await delay(25000);
-    const response = await fetch(baseAPI + "/" + nextAvailableId + "/config", {
-        method: 'POST',
-        headers: {
-            Authorization: String(process.env.PVE_TOKEN),
-            'Content-Type': 'application/json'
-            
-        },
-        body: JSON.stringify(configData)
-    });
-
-    const resJson = await response.json();
-        
-    } catch (error) {
-        console.error("Error:", error);
-    }
-
-    const diskResize = {
-        disk: "virtio0",
-        size: serverInfo.ssd + "G"
-    }
-
+if (IP_ADDRESS) {
     try {
-        const response = await fetch(baseAPI + "/" + nextAvailableId + "/resize", {
-            method: 'PUT',
+        const response = await fetch(baseAPI, {
+            method: 'POST',
+            headers: {
+                Authorization: String(process.env.PVE_TOKEN),
+                'Content-Type': 'application/json'         
+                },
+            body: JSON.stringify(createVMdata)
+            });
+    
+        const resJson = await response.json();
+            //console.log(resJson);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    
+    try {
+        await delay(25000);
+        const response = await fetch(baseAPI + "/" + nextAvailableId + "/config", {
+            method: 'POST',
             headers: {
                 Authorization: String(process.env.PVE_TOKEN),
                 'Content-Type': 'application/json'
-               
+                
             },
-            body: JSON.stringify(diskResize)
+            body: JSON.stringify(configData)
         });
-
+    
         const resJson = await response.json();
-        await delay(10000);
-    } catch (error) {
-        console.error("Error:", error);
-    }
+            
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    
+        const diskResize = {
+            disk: "virtio0",
+            size: serverInfo.ssd + "G"
+        }
+    
+        try {
+            const response = await fetch(baseAPI + "/" + nextAvailableId + "/resize", {
+                method: 'PUT',
+                headers: {
+                    Authorization: String(process.env.PVE_TOKEN),
+                    'Content-Type': 'application/json'
+                   
+                },
+                body: JSON.stringify(diskResize)
+            });
+    
+            const resJson = await response.json();
+            await delay(10000);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    
+}
 
 }

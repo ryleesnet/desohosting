@@ -38,6 +38,7 @@ export default function NewVms () {
       }
 
     const vmHostname: string = generateRandomString(12)
+    const passwd: string = generateRandomString(16)
 
     const contextUser = useUser()
     const walletBalanceTokensConverted = (walletBalanceTokens / 1000000000000000000 )
@@ -79,112 +80,6 @@ export default function NewVms () {
         link: link,
       })
     
-      function buyWithTokens (tokens: number, payment_plan: string) {
-
-        if (!contextUser?.user) {
-            contextUser?.login()
-            return
-        }
-        const permToCheck : Partial<TransactionSpendingLimitResponseOptions> = {
-            DAOCoinOperationLimitMap: {
-                'BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej': {
-                  'burn' : 'UNLIMITED'
-                }
-        }
-    }
-        
-        if (identity.hasPermissions(permToCheck)) {
-
-            const tokensToBurn = "0x" + (tokens * 1e18).toString(16)
-
-
-        const data = {
-			"UpdaterPublicKeyBase58Check": String(localStorage.getItem("desoActivePublicKey")),
-			"ProfilePublicKeyBase58CheckOrUsername": "BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej",
-			"CoinsToBurnNanos": tokensToBurn,
-		}
-
-        const options = {
-            txLimitCount: 1
-        }
-
-        
-       
-		burnDeSoToken(data, options).then(res => {
-            const postdata: SubmitPostRequestParams = {
-                UpdaterPublicKeyBase58Check: String(localStorage.getItem("desoActivePublicKey")),
-                ParentStakeID: 'b737dc7c74369ea7cc25bce6d3b14a4608df9bde1b37af7c3ecd39dca6246fc7',
-                BodyObj: {
-                    Body: "@DeSoHosting - I've made a purchase!",
-                    ImageURLs: null,
-                    VideoURLs: null
-                },
-                PostExtraData: {
-                    "server" : String(serverTypeInfo?.name),
-                    "payment_plan" : payment_plan,
-                    "last_payment_hex" : String(res.submittedTransactionResponse?.TxnHashHex)
-                }
-
-            }
-            
-            submitPost(postdata).then((res => {
-                setIsVisible(false)
-                setIsConfirmedVisible(true)
-                CreateVMs(serverTypeInfo, payment_plan, String(res.submittedTransactionResponse?.TxnHashHex), String(localStorage.getItem("desoActivePublicKey")), String(contextUser.user?.Username), vmHostname)
-            })).catch(error => {
-                console.log(error)
-                setIsVisible(false)
-            })
-			
-		}).catch(error => {
-            console.log(error)
-            setIsVisible(false)
-        })
-    }
-        }
-        
-        
-    function buyWithDeSo (desoAmount: number, payment_plan: string) {
-        if (!contextUser?.user) {
-            contextUser?.login()
-            return
-        }
-
-        const desoNanosToSend = desoAmount * 1e9 
-        const data: TxRequestWithOptionalFeesAndExtraData<SendDeSoRequest> = {
-            SenderPublicKeyBase58Check: String(contextUser?.user?.PublicKeyBase58Check),
-            RecipientPublicKeyOrUsername: "BC1YLin6CLZ52Jy7ak9BEjBQVHhSi3wNSVxc31FNeBKVKQsd9QEXTej",
-            AmountNanos: desoNanosToSend
-        }
-        
-        sendDeso(data).then((res => {
-            const postdata: SubmitPostRequestParams = {
-                UpdaterPublicKeyBase58Check: String(contextUser?.user?.PublicKeyBase58Check),
-                ParentStakeID: 'b737dc7c74369ea7cc25bce6d3b14a4608df9bde1b37af7c3ecd39dca6246fc7',
-                BodyObj: {
-                    Body: "@DeSoHosting - I've made a purchase!",
-                    ImageURLs: null,
-                    VideoURLs: null
-                },
-                PostExtraData: {
-                    "server" : String(serverTypeInfo?.name),
-                    "payment_plan" : payment_plan,
-                    "last_payment_hex" : String(res.submittedTransactionResponse?.TxnHashHex)
-                }
-
-            }
-            
-            submitPost(postdata).then((res => {
-                
-            })).catch(error => {
-                console.log(error)
-                setIsVisible(false)
-            })
-        })).catch(error => {
-            console.log(error)
-            setIsVisible(false)
-        })}
-
        return (
         
         <div className="border border-sky-200 justify-items-center mt-4 ml-10 mr-10 bg-slate-700 rounded-xl">

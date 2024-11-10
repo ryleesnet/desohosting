@@ -49,6 +49,7 @@ export default function MainContent () {
       }
 
       const vmHostname: string = generateRandomString(12)
+      const passwd: string = generateRandomString(16)
 
 
     const errorLink = onError((e) => {
@@ -129,7 +130,7 @@ export default function MainContent () {
             submitPost(postdata).then((res => {
                 setIsVisible(false)
                 setIsConfirmedVisible(true)
-                CreateVMs(serverTypeInfo, payment_plan, String(res.submittedTransactionResponse?.TxnHashHex), String(localStorage.getItem("desoActivePublicKey")), String(contextUser?.user?.Username), vmHostname).then((res) => {setPendingVMStatus(null)})
+                CreateVMs(serverTypeInfo, payment_plan, String(res.submittedTransactionResponse?.TxnHashHex), String(localStorage.getItem("desoActivePublicKey")), String(contextUser?.user?.Username), vmHostname, passwd).then((res) => {setPendingVMStatus(null)})
             })).catch(error => {
                 console.log(error)
                 setIsVisible(false)
@@ -277,7 +278,10 @@ export default function MainContent () {
                         expiration_date: "",
                         vmid: 0,
                         status: "creating"})
-                     CreateVMs(serverTypeInfo, "payment_plan", String("submittedTransactionResponse"), String(localStorage.getItem("desoActivePublicKey")), String(contextUser?.user?.Username), vmHostname).then((res) => {setPendingVMStatus(null)})
+                     CreateVMs(serverTypeInfo, "payment_plan", String("submittedTransactionResponse"), String(localStorage.getItem("desoActivePublicKey")), String(contextUser?.user?.Username), vmHostname, passwd).then((res) => {
+                        setPendingVMStatus(null)
+                        
+                    })
                      }}> Test</button>
                      <button className="m-2 p-2 rounded-xl bg-red-800 text-sky-200" onClick={() => {
                      setIsVisible(false)
